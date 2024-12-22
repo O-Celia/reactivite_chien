@@ -40,10 +40,11 @@ Visualisation des données :
 Permet d’afficher les données journalières sous forme d’icônes ou d’indicateurs colorés. </br>
 Cliquer sur une date ouvre une fenêtre de détails.
 - Page analytics :</br>
-Tableau de bord Power BI pour analyser :
+Dashboard avec PowerBI pour analyser :
     - Fréquence et intensité des déclencheurs.
     - Répartition des adjectifs sur une période donnée.
     - Tendances temporelles (amélioration/dégradation).
+Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant).
 
 Multi-plateforme :
 - Application utilisable sur ordinateur (navigateur web) et smartphone.
@@ -62,27 +63,27 @@ Compatible mobile et PC, avec hébergement cloud.
 Backend :
 - Langage : Python.
 - Framework : FastAPI pour gérer les API REST.
-- Base de données : SQLite (locale, légère, adaptée aux petits volumes de données).
+- Base de données : SQLite (locale, légère, adaptée aux petits volumes de données) ou MySQL (familiarité d'utilisation).
 
 Frontend :
 - Streamlit pour une interface utilisateur interactive et développée en Python.
 
 Hébergement :
 - Hébergement local pour un usage personnel sur ordinateur (Flask/Streamlit exécuté en localhost).
-- Possibilité d’hébergement cloud gratuit (Heroku ou Render) si besoin de synchronisation entre plusieurs appareils.
+- Possibilité d’hébergement cloud gratuit (Render, Oracle, AWS) si besoin de synchronisation entre plusieurs appareils, ou K3s avec raspberry pour maintenir l'application en ligne.
 
 Outils d’analyse :
-- Power BI Desktop pour créer des visualisations des données stockées dans la base SQLite.
+- Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
 - Intégration des graphiques Power BI dans la page analytics.
 
 DevOps :
 - GitHub Actions : pipelines CI/CD pour automatiser tests et déploiement avant mise en production.
 - Docker : conteneurisation de l’application pour portabilité.
-- Terraform : Infrastructure as Code pour configurer l’hébergement Heroku.
-- Kubernetes : Orchestration avec Helm Charts.
+- Terraform : Infrastructure as Code pour configurer l’hébergement.
+- Kubernetes : Orchestration avec fichiers YAML et Helm Charts.
 
 Sécurité :
-- Gestion des secrets et variables d’environnement avec HashiCorp Vault Vault ou fichiers .env.
+- Gestion des secrets et variables d’environnement avec HashiCorp Vault ou fichiers .env.
 
 ## 4. Interface utilisateur
 
@@ -121,7 +122,6 @@ Graphiques générés avec Power BI :
 Installation des outils :
 - Python 3.11, pip, et modules nécessaires : fastapi, uvicorn, sqlalchemy, streamlit, vault-cli.
 - Power BI Desktop.
-- Heroku CLI.
 
 Planification des fonctionnalités :
 - Définir la structure de la base de données (table utilisateurs, déclencheurs, saisies journalières).
@@ -166,7 +166,7 @@ Intégration des fonctionnalités :
 ### 5.4. Analyse des données (Power BI)
 
 Création des tableaux de bord :
-- Connecter Power BI à SQLite.
+- Connecter Power BI à la BDD.
 - Concevoir :
     - Histogramme des déclencheurs (par intensité).
     - Diagramme circulaire pour les adjectifs (répartition).
@@ -174,17 +174,17 @@ Création des tableaux de bord :
     - Jauge ou cercle (%) de réactivité sur le mois
 
 Publication locale :
-- Exporter les graphiques en HTML ou les intégrer directement dans Streamlit.
+- Exporter les graphiques en HTML ou JPG.
 
 ### 5.5. Automatisation DevOps
 
 Pipeline CI/CD :
 - Configurer GitHub Actions pour :
     - Lancer des tests unitaires (FastAPI).
-    - Construire une image Docker et déployer sur Heroku.
+    - Construire une image Docker et déployer sur le cloud.
 
 Infrastructure as Code :
-- Utiliser Terraform pour configurer Heroku :
+- Utiliser Terraform pour configurer le cloud :
     - Créer dynamiquement les instances nécessaires.
     - Intégrer les secrets via Vault.
 
@@ -194,8 +194,8 @@ Conteneurisation :
 
 ### 5.6. Déploiement
 
-Configuration Heroku :
-- Créer une application sur Heroku et lier le dépôt GitHub.
+Configuration cloud :
+- Créer une application sur le cloud choisi et lier le dépôt GitHub.
 - Déployer via Docker ou le CLI.
 
 Tests finaux :
@@ -204,7 +204,7 @@ Tests finaux :
 
 ## 6. Maintenance et évolutions futures
 
-Surveillance : Utiliser les logs Heroku pour surveiller les erreurs. </br>
+Surveillance : Utiliser les logs du cloud pour surveiller les erreurs. </br>
 Améliorations possibles :
 - Ajouter des notifications (ex. : rappel de saisie quotidienne).
 - Étendre l’analyse avec des graphiques supplémentaires.
