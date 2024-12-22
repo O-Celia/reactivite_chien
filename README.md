@@ -70,7 +70,7 @@ Frontend :
 
 Hébergement :
 - Hébergement local pour un usage personnel sur ordinateur (Flask/Streamlit exécuté en localhost).
-- Possibilité d’hébergement cloud gratuit (Render, Oracle, AWS) si besoin de synchronisation entre plusieurs appareils, ou K3s avec raspberry pour maintenir l'application en ligne.
+- Possibilité d’hébergement cloud gratuit (Oracle) si besoin de synchronisation entre plusieurs appareils, ou K3s avec raspberry pour maintenir l'application en ligne.
 
 Outils d’analyse :
 - Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
