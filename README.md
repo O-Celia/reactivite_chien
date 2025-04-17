@@ -47,7 +47,8 @@ Dashboard avec PowerBI pour analyser :
     - Tendances temporelles (amélioration/dégradation).
 
 Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant). </br>
-Recherche intelligente : Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
+Recherche intelligente : </br>
+Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
 
 Multi-plateforme :
 - Application utilisable sur ordinateur (navigateur web) et smartphone.
