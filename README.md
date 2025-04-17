@@ -20,7 +20,7 @@ Ce projet est mis en place pour l'observation de mon chien et de celui d'une ami
 
 L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité élevée) et semblait agité. En fin de semaine, elle consulte le dashboard pour voir les déclencheurs les plus fréquents.
 
-#### 1.4 MVP (Version 1) :
+### 1.4 MVP (Version 1) :
 
 - Authentification simple
 - Saisie manuelle des déclencheurs
