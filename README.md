@@ -12,6 +12,7 @@ Ce projet est mis en place pour l'observation de mon chien et de celui d'une ami
 - Suivre les déclencheurs (événements stressants) et leur intensité.
 - Enregistrer l’état émotionnel quotidien du chien (via des adjectifs prédéfinis).
 - Offrir une visualisation claire et intuitive via un calendrier interactif et des graphiques.
+- Offrir une possibilité de recherche avancée dans la base de données.
 - Garantir un accès simple et gratuit à l’application, utilisable sur ordinateur et smartphone.
 - Appliquer des outils DevOps pour automatiser le déploiement et la gestion des secrets.
 
@@ -44,7 +45,8 @@ Dashboard avec PowerBI pour analyser :
     - Fréquence et intensité des déclencheurs.
     - Répartition des adjectifs sur une période donnée.
     - Tendances temporelles (amélioration/dégradation).
-Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant).
+Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant). </br>
+Recherche intelligente : Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
 
 Multi-plateforme :
 - Application utilisable sur ordinateur (navigateur web) et smartphone.
@@ -75,6 +77,7 @@ Hébergement :
 Outils d’analyse :
 - Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
 - Intégration des graphiques Power BI dans la page analytics.
+- Elasticsearch pour indexer et rechercher efficacement les saisies journalières (déclencheurs, adjectifs, commentaires éventuels)avec ajout d'une fonctionnalité de recherche rapide par mots-clés, filtres (intensité, humeur, date, etc.) ou suggestions basées sur les données saisies.
 
 DevOps :
 - GitHub Actions : pipelines CI/CD pour automatiser tests et déploiement avant mise en production.
@@ -115,6 +118,14 @@ Graphiques générés avec Power BI :
 - Graphique linéaire des tendances temporelles.
 - Jauge ou cercle (%) de réactivité sur le mois
 
+Recherche avancée via Elasticsearch :
+Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs).
+L’interface proposera :
+- un champ de recherche textuelle,
+- des filtres temporels (plages de dates),
+- des filtres par mots-clés/intensité.
+Les résultats s’afficheront sous forme de liste ou de résumé visuel (table ou graphique simple), et permettront d’identifier rapidement des patterns ou cas spécifiques.
+
 ## 5. Étapes détaillées de mise en place
 
 ### 5.1. Préparation
@@ -122,6 +133,8 @@ Graphiques générés avec Power BI :
 Installation des outils :
 - Python 3.11, pip, et modules nécessaires : fastapi, uvicorn, sqlalchemy, streamlit, vault-cli.
 - Power BI Desktop.
+- Docker
+- Elasticsearch
 
 Planification des fonctionnalités :
 - Définir la structure de la base de données (table utilisateurs, déclencheurs, saisies journalières).
@@ -151,13 +164,19 @@ Sécurisation des API :
 - Ajouter des tokens JWT pour gérer les sessions utilisateurs.
 - Stocker les secrets et clés dans Vault.
 
+Intégration Elasticsearch :
+- Installer et configurer un conteneur Elasticsearch via Docker.
+- Créer une fonction de synchronisation entre les données de la base SQL et l’index Elasticsearch (ex. : chaque nouvelle saisie ou modification alimente aussi l’index).
+- Exposer une API /search permettant de requêter Elasticsearch à partir de Streamlit.
+- Indexer les champs suivants : date, adjectifs, déclencheurs, intensité, commentaire libre (si ajouté).
+
 ### 5.3. Développement du frontend (Interface utilisateur)
 
 Mise en place de Streamlit :
 - Créer un script principal app.py.
 - Implémenter les pages principales :
     - Page Calendrier : formulaire interactif pour saisir ou consulter les données.
-    - Page Analytics : intégrer les visualisations Power BI.
+    - Page Analytics : intégrer les visualisations Power BI et une barre de recherche.
 
 Intégration des fonctionnalités :
 - Appeler les API FastAPI pour récupérer et enregistrer les données.
