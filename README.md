@@ -46,7 +46,8 @@ Dashboard avec PowerBI pour analyser :
     - Répartition des adjectifs sur une période donnée.
     - Tendances temporelles (amélioration/dégradation).
 
-Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant). </br>
+Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant).
+
 Recherche intelligente : </br>
 Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
 
