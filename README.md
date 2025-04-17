@@ -44,7 +44,8 @@ Cliquer sur une date ouvre une fenêtre de détails.
 Dashboard avec PowerBI pour analyser :
     - Fréquence et intensité des déclencheurs.
     - Répartition des adjectifs sur une période donnée.
-    - Tendances temporelles (amélioration/dégradation). </br>
+    - Tendances temporelles (amélioration/dégradation).
+
 Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant). </br>
 Recherche intelligente : Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
 
