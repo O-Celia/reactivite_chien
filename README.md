@@ -122,11 +122,11 @@ Graphiques générés avec Power BI :
 - Jauge ou cercle (%) de réactivité sur le mois
 
 Recherche avancée via Elasticsearch : </br>
-Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs). </br>
-L’interface proposera :
+Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs). L’interface proposera :
 - un champ de recherche textuelle,
 - des filtres temporels (plages de dates),
-- des filtres par mots-clés/intensité. </br>
+- des filtres par mots-clés/intensité.
+
 Les résultats s’afficheront sous forme de liste ou de résumé visuel (table ou graphique simple), et permettront d’identifier rapidement des patterns ou cas spécifiques.
 
 ## 5. Étapes détaillées de mise en place
