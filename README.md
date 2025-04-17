@@ -80,7 +80,7 @@ Hébergement :
 Outils d’analyse :
 - Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
 - Intégration des graphiques Power BI dans la page analytics.
-- Elasticsearch pour indexer et rechercher efficacement les saisies journalières (déclencheurs, adjectifs, commentaires éventuels)avec ajout d'une fonctionnalité de recherche rapide par mots-clés, filtres (intensité, humeur, date, etc.) ou suggestions basées sur les données saisies.
+- Elasticsearch pour indexer et rechercher efficacement les saisies journalières (déclencheurs, adjectifs, commentaires éventuels) avec ajout d'une fonctionnalité de recherche rapide par mots-clés, filtres (intensité, humeur, date, etc.) ou suggestions basées sur les données saisies.
 
 DevOps :
 - GitHub Actions : pipelines CI/CD pour automatiser tests et déploiement avant mise en production.
