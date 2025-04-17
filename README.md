@@ -44,7 +44,7 @@ Cliquer sur une date ouvre une fenêtre de détails.
 Dashboard avec PowerBI pour analyser :
     - Fréquence et intensité des déclencheurs.
     - Répartition des adjectifs sur une période donnée.
-    - Tendances temporelles (amélioration/dégradation).
+    - Tendances temporelles (amélioration/dégradation). </br>
 Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant). </br>
 Recherche intelligente : Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
 
@@ -118,12 +118,12 @@ Graphiques générés avec Power BI :
 - Graphique linéaire des tendances temporelles.
 - Jauge ou cercle (%) de réactivité sur le mois
 
-Recherche avancée via Elasticsearch :
-Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs).
+Recherche avancée via Elasticsearch : </br>
+Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs). </br>
 L’interface proposera :
 - un champ de recherche textuelle,
 - des filtres temporels (plages de dates),
-- des filtres par mots-clés/intensité.
+- des filtres par mots-clés/intensité. </br>
 Les résultats s’afficheront sous forme de liste ou de résumé visuel (table ou graphique simple), et permettront d’identifier rapidement des patterns ou cas spécifiques.
 
 ## 5. Étapes détaillées de mise en place
