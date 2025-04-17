@@ -16,6 +16,17 @@ Ce projet est mis en place pour l'observation de mon chien et de celui d'une ami
 - Garantir un accès simple et gratuit à l’application, utilisable sur ordinateur et smartphone.
 - Appliquer des outils DevOps pour automatiser le déploiement et la gestion des secrets.
 
+### 1.3. Exemple de scénario utilisateur
+
+L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité élevée) et semblait agité. En fin de semaine, elle consulte le dashboard pour voir les déclencheurs les plus fréquents.
+
+#### 1.4 MVP (Version 1) :
+
+- Authentification simple
+- Saisie manuelle des déclencheurs
+- Calendrier avec visualisation journalière
+- Dashboard Power BI en local
+
 ## 2. Spécifications fonctionnelles
 
 ### 2.1. Fonctionnalités principales
@@ -41,7 +52,7 @@ Visualisation des données :
 Permet d’afficher les données journalières sous forme d’icônes ou d’indicateurs colorés. </br>
 Cliquer sur une date ouvre une fenêtre de détails.
 - Page analytics :</br>
-Dashboard avec PowerBI pour analyser :
+Dashboard (avec des visuels PowerBI exportés en PNG/JPEG ou utilisation de Plotly ou Matplotlib dans Streamlit pour remplacer certains dashboard) pour analyser :
     - Fréquence et intensité des déclencheurs.
     - Répartition des adjectifs sur une période donnée.
     - Tendances temporelles (amélioration/dégradation).
@@ -69,13 +80,16 @@ Backend :
 - Langage : Python.
 - Framework : FastAPI pour gérer les API REST.
 - Base de données : SQLite (locale, légère, adaptée aux petits volumes de données) ou MySQL (familiarité d'utilisation).
+- Authentification : Auth0 (authentification OAuth2 moderne et sécurisée, intégrée avec FastAPI via `authlib` ou `python-jose`).
+- Stockage fichiers : si l'application doit permettre à terme le dépôt ou la lecture de fichiers (ex. : captures d’écran, exports de graphiques, journaux), un stockage séparé sera nécessaire (MinIO, volume Docker local, ou volume Kubernetes).
 
 Frontend :
 - Streamlit pour une interface utilisateur interactive et développée en Python.
 
-Hébergement :
+Infrastructure :
 - Hébergement local pour un usage personnel sur ordinateur (Flask/Streamlit exécuté en localhost).
 - Possibilité d’hébergement cloud gratuit (Oracle) si besoin de synchronisation entre plusieurs appareils, ou K3s avec raspberry pour maintenir l'application en ligne.
+- Ingress Controller : Traefik pour gérer l’exposition des services FastAPI/Streamlit sur le cluster Kubernetes. Possibilité d’y intégrer un certificat SSL plus tard si HTTPS devient envisageable.
 
 Outils d’analyse :
 - Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
@@ -90,6 +104,7 @@ DevOps :
 
 Sécurité :
 - Gestion des secrets et variables d’environnement avec HashiCorp Vault ou fichiers .env.
+- OWASP pour audit de sécurité.
 
 ## 4. Interface utilisateur
 
