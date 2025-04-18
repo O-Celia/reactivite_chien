@@ -30,7 +30,7 @@ graph TD
 
   subgraph Cloud Infrastructure Oracle
     L[VPC + Subnets]
-    M[(Oracle Autonomous Database)]
+    M[(Autonomous Database)]
   end
 
   A --> B
