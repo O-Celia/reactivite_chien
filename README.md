@@ -52,8 +52,6 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 docker-compose up --build
 ```
 
----
-
 ## 📊 Dashboard Power BI
 
 L'application propose un lien vers un tableau de bord Power BI interactif permettant de suivre :
@@ -61,15 +59,11 @@ L'application propose un lien vers un tableau de bord Power BI interactif permet
 - L’évolution des réactions
 - Des statistiques comportementales dans le temps
 
----
-
 ## 🧪 Tests
 
 ```bash
 pytest tests/
 ```
-
----
 
 ## 🌐 Technologies utilisées
 
