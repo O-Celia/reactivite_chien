@@ -27,7 +27,7 @@ graph TD
 
   end
 
-  subgraph Cloud Infrastructure (Oracle Cloud)
+  subgraph Cloud Infrastructure Oracle
     L[VPC + Subnets]
     M[Oracle Object Storage]
   end
