@@ -29,7 +29,7 @@ graph TD
 
   subgraph Cloud Infrastructure Oracle
     L[VPC + Subnets]
-    M[Oracle Object Storage]
+    M[Oracle Autonomous Database]
   end
 
   A --> B
@@ -47,7 +47,7 @@ Contenu prévu :
 ## 🔧 Technologies prévues
 
 - Terraform : provisioning de toute l'infrastructure cloud (réseau, stockage, compute…)
-- Oracle Cloud : provider principal (Compute, VCN, Object Storage)
+- Oracle Cloud : provider principal (Compute, VCN, Autonomous Database)
 - K3s : orchestration Kubernetes légère, adaptée aux petites architectures
 - Vault : gestion centralisée des secrets et credentials
 - MySQL : base de données relationnelle pour persister les données utilisateurs et d’analyse
