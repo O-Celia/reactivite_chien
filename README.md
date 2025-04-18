@@ -67,14 +67,15 @@ pytest tests/
 
 ## 🌐 Technologies utilisées
 
-Type | Stack
-Backend | FastAPI, Pydantic, Pandas, SQLite
-Frontend | Streamlit, Matplotlib / Plotly
-BI | Power BI
-Tests | Pytest
-DevOps | Docker, GitHub Actions
-Observabilité | Elasticsearch (optionnel)
-Cloud readiness | Terraform, Vault, Oracle, K3s, Prometheus, Grafana (V2)
+| **Type**          | **Stack**                                                |
+|-------------------|----------------------------------------------------------|
+| **Backend**       | FastAPI, Pydantic, Pandas, SQLite                        |
+| **Frontend**      | Streamlit, Matplotlib / Plotly                           |
+| **BI**            | Power BI                                                 |
+| **Tests**         | Pytest                                                   |
+| **DevOps**        | Docker, GitHub Actions                                   |
+| **Observabilité** | Elasticsearch (optionnel)                                |
+| **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (V2) |
 
 ---
 
