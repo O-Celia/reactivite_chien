@@ -30,6 +30,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 
 ## 📂 Arborescence du projet
 
+```bash
 ├── api/                  # Backend FastAPI
 ├── streamlit_app/        # Frontend Streamlit
 ├── infra/                # Infra as Code (Terraform + diagramme)
@@ -40,3 +41,4 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── Dockerfile.api
 ├── Dockerfile.streamlit
 ├── README.md
+```
