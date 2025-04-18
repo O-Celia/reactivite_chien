@@ -20,7 +20,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 
 ### V2 – Extension cloud native (non déployée mais préparée)
 - Infrastructure as Code avec **Terraform** dans `/infra`
-- Object storage via **MinIO** ou **Oracle Object Storage**
+- Object storage via **Oracle Object Storage**
 - Orchestration avec **K3s** (Kubernetes léger)
 - Secrets Management avec **Vault**
 - Base de données Cloud (à définir selon provider)
