@@ -49,12 +49,14 @@ graph TD
 
 Ce dossier contient la définition de l’infrastructure as code pour déployer l’environnement cloud.
 
+```
 /infra
 ├── main.tf               # Déclaration principale (VCN, compute, DB, K3s, etc.)
 ├── variables.tf          # Paramètres configurables de l'infra
 ├── outputs.tf            # Variables de sortie utiles (IP publiques, URLs, etc.)
 ├── providers.tf          # Configuration du provider Oracle Cloud
 └── README.md             # Documentation de l’infrastructure (ce fichier)
+```
 
 ## 🌐 Technologies prévues
 
