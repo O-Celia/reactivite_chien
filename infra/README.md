@@ -5,36 +5,42 @@ Cette section décrit une architecture cloud scalable pour une future version d�
 ---
 
 ## 🔧 Diagramme d'architecture (Mermaid)
-
 ```mermaid
 graph TD
   subgraph Utilisateur
-    A[Utilisateur Web]
-  end
-
-  subgraph Frontend
-    B[Application Streamlit]
-  end
-
-  subgraph K3s
-    B --> C[API REST FastAPI]
-    C --> E[Elasticsearch]
-    C --> F[Power BI Desktop / Service]
-    C --> H[Prometheus]
-    C --> I[Vault]
-
-    H --> J[Grafana]
-    E --> K[Kibana]
-
+    A[Propriétaire de chien]
   end
 
   subgraph Cloud Infrastructure Oracle
     L[VPC + Subnets]
-    M[(Autonomous Database)]
+    DB[(Autonomous Database)]
   end
 
-  A --> B
-  L --> K3s
+  subgraph K3s-Cluster
+    T[Traefik]
+    B[Application Streamlit]
+    C[API REST FastAPI]
+    E[Elasticsearch]
+    H[Prometheus]
+    I[Vault]
+    J[Grafana]
+    K[Kibana]
+  end
+
+  A -->|HTTP| T
+  T --> B
+  T --> C
+
+  C --> E
+  C --> F[Power BI Desktop / Service]
+  C --> H
+  C --> I
+  C --> DB
+
+  H --> J
+  E --> K
+
+  L --> K3s-Cluster
 ```
 
 ---
