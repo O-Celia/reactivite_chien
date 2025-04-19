@@ -60,17 +60,6 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 
 ## 🌐 Technologies prévues
 
-- Terraform : provisioning de toute l'infrastructure cloud (réseau, stockage, compute…)
-- Oracle Cloud : provider principal (Compute, VCN, Autonomous Database)
-- K3s : orchestration Kubernetes légère, adaptée aux petites architectures
-- Vault : gestion centralisée des secrets et credentials
-- Elasticsearch : stockage et indexation des logs applicatifs et recherches full-text
-- Kibana : visualisation des logs
-- Prometheus : monitoring des performances de l’API, base de données, containers…
-- Grafana : dashboards visuels à partir des données Prometheus
-- Traefik
-- Power BI Service / Desktop
-
 | 🛠️ Outil         | 🎯 Rôle                                                                 |
 |------------------|------------------------------------------------------------------------|
 | **Terraform**    | Provisioning automatisé de l'infrastructure (réseau, compute, DB…)     |
@@ -82,7 +71,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 | **Kibana**       | Exploration et visualisation des logs via interface                     |
 | **Prometheus**   | Collecte des métriques système et applicatives                          |
 | **Grafana**      | Tableaux de bord pour visualiser les métriques                          |
-| **Power BI**     | Exploration, analyse et visualisation des données utilisateur           |
+| **Power BI**     | Service et Desktop : Exploration, analyse et visualisation des données utilisateur           |
 
 ## 🔍 Observabilité
 
