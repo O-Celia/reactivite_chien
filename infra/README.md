@@ -102,7 +102,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 
 Tous ces services sont routés via Traefik en interne, ce qui signifie que seuls les ports 80/443 doivent être exposés publiquement (les autres restent internes au cluster).
 
-🔐 Gestion TLS avec cert-manager (optionnel)
+## 🔐 Gestion TLS avec cert-manager (optionnel)
 
 Pour sécuriser les communications via HTTPS :
 - cert-manager peut être installé dans le cluster K3s.
