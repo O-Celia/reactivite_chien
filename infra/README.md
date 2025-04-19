@@ -4,7 +4,7 @@ Cette section décrit une architecture cloud scalable pour une future version d�
 
 ---
 
-## 🌐 Diagramme d'architecture (Mermaid)
+## 🔧 Diagramme d'architecture (Mermaid)
 
 ```mermaid
 graph TD
@@ -47,7 +47,7 @@ Contenu prévu :
 - README.md
 - Diagramme Mermaid
 
-## 🔧 Technologies prévues
+## 🌐 Technologies prévues
 
 - Terraform : provisioning de toute l'infrastructure cloud (réseau, stockage, compute…)
 - Oracle Cloud : provider principal (Compute, VCN, Autonomous Database)
