@@ -4,21 +4,24 @@
 
 ### 1.1. Contexte
 
-Mon chien a des comportements réactifs déclenchés par des facteurs externes (ex. : bruits, autres animaux). Ce projet vise à concevoir une application personnelle pour suivre ces déclencheurs et leur intensité, ainsi que l’état émotionnel du chien, pour observer des tendances via des tableaux de bord et identifier des pistes d’amélioration.
-Ce projet est mis en place pour l'observation de mon chien et de celui d'une amie. L'application est donc à ce jour prévue pour une utilisation limitée. L’application a pour but d'être utilisée sur PC et mobile.
+Ce projet a été conçu pour répondre à un besoin personnel : suivre les comportements réactifs des chiens déclenchés par des facteurs externes (ex. : bruits, autres animaux, humains, etc.). Ce projet vise à concevoir une application pour suivre ces déclencheurs et leur intensité, ainsi que l’état émotionnel du chien, pour observer des tendances via des tableaux de bord et identifier des pistes d’amélioration.
+Ce projet est destiné à un usage personnel et mis en place pour l'observation de mon chien et de celui d'une amie. L'application est donc à ce jour prévue pour une utilisation limitée. L’application a pour but d'être utilisée sur PC et mobile.
 
 ### 1.2. Objectifs
 
 - Suivre les déclencheurs (événements stressants) et leur intensité.
 - Enregistrer l’état émotionnel quotidien du chien (via des adjectifs prédéfinis).
-- Offrir une visualisation claire et intuitive via un calendrier interactif et des graphiques.
-- Offrir une possibilité de recherche avancée dans la base de données.
-- Garantir un accès simple et gratuit à l’application, utilisable sur ordinateur et smartphone.
-- Appliquer des outils DevOps pour automatiser le déploiement et la gestion des secrets.
+- Offrir une visualisation claire et intuitive via un calendrier et des graphiques.
+- Intégrer un dashboard Power BI pour l’analyse approfondie
+- Permettre la recherche avancée via Elasticsearch dans la base de données.
+- Garantir un accès simple et gratuit à l’application.
+- Appliquer des outils DevOps ((CI/CD, containerisation, sécurité, IaC).
+- Offrir un usage multiplateforme (PC / smartphone).
+- Préparer l’extension cloud native pour un futur déploiement.
 
 ### 1.3. Exemple de scénario utilisateur
 
-L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité élevée) et semblait agité. En fin de semaine, elle consulte le dashboard pour voir les déclencheurs les plus fréquents.
+L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité élevée) et semblait agité. En fin de semaine, il consulte le dashboard pour voir les déclencheurs les plus fréquents.
 
 ### 1.4 MVP (Version 1) :
 
@@ -31,146 +34,143 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
 
 ### 2.1. Fonctionnalités principales
 
-Fonctionnalités utilisateur :
+**Authentification :**
+- Création de compte utilisateur avec mot de passe chiffré.
+- Authentification via JSON Web Tokens (JWT).
+- Gestion des sessions côté API FastAPI.
 
-Création de compte utilisateur :
-- Possibilité de créer un compte unique pour l’application.
-- Authentification basique (nom d’utilisateur/mot de passe).
-- Gestion des comptes via FastAPI.
-
-Gestion des déclencheurs :
+**Gestion des déclencheurs :**
 - Déclencheurs par défauts inclus pour simplifier le démarrage.
-- Liste des déclencheurs personnalisables pour chaque utilisateur (ajout, modification).
+- Liste des déclencheurs personnalisables pour chaque utilisateur (ajout, modification, suppression).
 
-Saisie quotidienne :
-- Sélectionner les déclencheurs du jour et leur intensité (léger, moyen, élevé).
-- Ajouter des adjectifs décrivant l’état émotionnel du chien : Pré-suggestions (fatigué, stressé, normal, heureux, malade, agressif) ou ajouts manuels à la liste proposée.
-- Calendrier interactif pour consigner les données journalières
+**Saisie quotidienne :**
+- Sélection des déclencheurs du jour et leur intensité (léger, moyen, élevé).
+- Sélection des adjectifs émotionnels du jour (pré-remplis ou ajoutés) : fatigué, stressé, normal, heureux, malade, agressif.
+- Calendrier interactif pour consulter et enregistrer les données.
 
-Visualisation des données :
-- Page calendrier interactif :</br>
-Permet d’afficher les données journalières sous forme d’icônes ou d’indicateurs colorés. </br>
-Cliquer sur une date ouvre une fenêtre de détails.
-- Page analytics :</br>
-Dashboard (avec des visuels PowerBI exportés en PNG/JPEG ou utilisation de Plotly ou Matplotlib dans Streamlit pour remplacer certains dashboard) pour analyser :
+**Visualisation des données :**
+- Calendrier interactif avec affichage visuel des données (icônes ou d’indicateurs colorés)
+- Détail de chaque journée accessible via clic.
+- Page Analytics :
     - Fréquence et intensité des déclencheurs.
-    - Répartition des adjectifs sur une période donnée.
-    - Tendances temporelles (amélioration/dégradation).
+    - Répartition des adjectifs émotionnels.
+    - Évolution temporelle.
+    - Graphiques Streamlit (Plotly ou Matplotlib).
+    - Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles.
 
-Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles (l'ajout direct sur l'application nécessite PowerBI Embedded, qui est payant).
+**Recherche intelligente :**
+- Recherche via Elasticsearch : filtres sur les déclencheurs, adjectifs, intensité et dates.
+- Interface simple type barre de recherche + filtres.
 
-Recherche intelligente : </br>
-Une fonctionnalité de recherche avancée permettra de filtrer les saisies par mots-clés, intensité, humeur ou plage de dates. L’utilisateur pourra ainsi retrouver des situations similaires ou observer des cas spécifiques. Cette recherche sera alimentée par Elasticsearch.
-
-Multi-plateforme :
-- Application utilisable sur ordinateur (navigateur web) et smartphone.
+**Multi-plateforme :**
+- Application utilisable sur ordinateur et mobile (navigateur web).
 
 ### 2.2. Contraintes fonctionnelles
 
-L’application doit être gratuite à concevoir et à utiliser. </br>
-Les données doivent être sécurisées et accessibles uniquement à l’utilisateur.</br>
-Interface simplifiée pour une utilisation intuitive. </br>
-Compatible mobile et PC, avec hébergement cloud.
+- Application gratuite à concevoir et à utiliser.
+- Données sécurisées et accessibles uniquement à l’utilisateur.
+- Interface simplifiée, intuitive.
+- Compatible PC et smartphone.
 
 ## 3. Spécifications techniques
 
 ### 3.1. Technologies choisies
 
-Backend :
+**Backend :**
 - Langage : Python.
 - Framework : FastAPI pour gérer les API REST.
-- Base de données : SQLite (locale, légère, adaptée aux petits volumes de données) ou MySQL (familiarité d'utilisation).
-- Authentification : Auth0 (authentification OAuth2 moderne et sécurisée, intégrée avec FastAPI via `authlib` ou `python-jose`).
-- Stockage fichiers : si l'application doit permettre à terme le dépôt ou la lecture de fichiers (ex. : captures d’écran, exports de graphiques, journaux), un stockage séparé sera nécessaire (MinIO, volume Docker local, ou volume Kubernetes).
+- Base de données : SQLite (locale, légère, adaptée aux petits volumes de données).
+- Authentification : JWT via `python-jose`).
+- ORM : SQLAlchemy
 
-Frontend :
-- Streamlit pour une interface utilisateur interactive et développée en Python.
+**Frontend :**
+- Streamlit pour une interface utilisateur interactive.
 
-Infrastructure :
-- Hébergement local pour un usage personnel sur ordinateur (Flask/Streamlit exécuté en localhost).
-- Possibilité d’hébergement cloud gratuit (Oracle) si besoin de synchronisation entre plusieurs appareils, ou K3s avec raspberry pour maintenir l'application en ligne.
-- Ingress Controller : Traefik pour gérer l’exposition des services FastAPI/Streamlit sur le cluster Kubernetes. Possibilité d’y intégrer un certificat SSL plus tard si HTTPS devient envisageable.
+**Infrastructure :**
+- Exécution locale via Streamlit.
+- Docker pour portabilité.
+- k3s pour futur déploiement (V2).
+- Ingress : Traefik pour gérer l’exposition des services FastAPI/Streamlit sur le cluster Kubernetes (V2).
+- Possibilité d’hébergement sur Oracle Cloud Free Tier (V2).
+- Possibilité d'intégrer un certificat SSL pour de l'HTTPS (V3).
 
-Outils d’analyse :
-- Power BI Desktop pour créer des visualisations des données stockées dans la BDD.
-- Intégration des graphiques Power BI dans la page analytics.
-- Elasticsearch pour indexer et rechercher efficacement les saisies journalières (déclencheurs, adjectifs, commentaires éventuels) avec ajout d'une fonctionnalité de recherche rapide par mots-clés, filtres (intensité, humeur, date, etc.) ou suggestions basées sur les données saisies.
+**Analyse de données :**
+- Graphiques Plotly/Matplotlib pour visualisations des données.
+- PowerBI Service pour l'ajout d'un lien Web avec graphiques interactifs.
+- Elasticsearch pour la recherche intelligente (via Docker).
 
-DevOps :
+**DevOps :**
 - GitHub Actions : pipelines CI/CD pour automatiser tests et déploiement avant mise en production.
 - Docker : conteneurisation de l’application pour portabilité.
 - Terraform : Infrastructure as Code pour configurer l’hébergement.
-- Kubernetes : Orchestration avec fichiers YAML et Helm Charts.
+- Kubernetes/k3s : Orchestration avec fichiers YAML et Helm Charts.
 
-Sécurité :
-- Gestion des secrets et variables d’environnement avec HashiCorp Vault ou fichiers .env.
+**Sécurité :**
+- Gestion des secrets et variables d’environnement avec des fichiers .env.
 - OWASP pour audit de sécurité.
+- Pytest dans GitHub Actions
 
 ## 4. Interface utilisateur
 
 ### 4.1. Page d’accueil
 
-Formulaire de connexion et d’inscription.
+- Formulaire de connexion et d’inscription.
 
 ### 4.2. Page de gestion des déclencheurs
 
-Liste des déclencheurs existants. </br>
-Bouton pour ajouter un nouveau déclencheur (nom + description). </br>
-Options pour modifier ou supprimer des déclencheurs (choix d'emojis éventuellement).
+- Liste des déclencheurs existants.
+- Ajout / modification / suppression d'un nouveau déclencheur.
+- Utilisation possible d’émojis pour illustrer.
 
 ### 4.3. Page de saisie quotidienne
 
-Calendrier interactif :
-- Sélection d’une date pour saisir des données.
-
-Formulaire de saisie :
-- Liste des déclencheurs avec cases à cocher pour sélectionner ceux qui se sont produits.
-- Choix de l’intensité (léger, moyen, élevé).
-- Liste d’adjectifs de l'humeur du chien prédéfinis avec sélection multiple.
+- Calendrier interactif avec sélection de date.
+- Sélection des déclencheurs du jour (avec intensité).
+- Sélection des adjectifs émotionnels.
 
 ### 4.4. Page analytics
 
-Graphiques générés avec Power BI :
+**Graphiques générés avec Plotly :**
 - Histogramme des déclencheurs (par intensité).
 - Diagramme circulaire des adjectifs (répartition).
 - Graphique linéaire des tendances temporelles.
-- Jauge ou cercle (%) de réactivité sur le mois
+- Jauge ou cercle (%) de réactivité mensuelle.
 
-Recherche avancée via Elasticsearch : </br>
-Une zone de recherche sera ajoutée à la page analytics, permettant à l’utilisateur d’explorer ses données personnelles avec une interface simple de type moteur de recherche. Cette fonctionnalité exploitera Elasticsearch pour offrir une recherche rapide, tolérante aux fautes de frappe, et filtrable (par date, intensité, adjectifs, déclencheurs). L’interface proposera :
-- un champ de recherche textuelle,
-- des filtres temporels (plages de dates),
-- des filtres par mots-clés/intensité.
-
-Les résultats s’afficheront sous forme de liste ou de résumé visuel (table ou graphique simple), et permettront d’identifier rapidement des patterns ou cas spécifiques.
+**Recherche avancée via Elasticsearch :**
+- champ de recherche textuelle,
+- filtres temporels (plages de dates),
+- filtres par mots-clés/intensité.
 
 ## 5. Étapes détaillées de mise en place
 
 ### 5.1. Préparation
 
-Installation des outils :
-- Python 3.11, pip, et modules nécessaires : fastapi, uvicorn, sqlalchemy, streamlit, vault-cli.
+**Installation des outils :**
+- Python, pip, et modules nécessaires : fastapi, uvicorn, sqlalchemy, streamlit, vault-cli (V2).
 - Power BI Desktop.
 - Docker
 - Elasticsearch
 
-Planification des fonctionnalités :
-- Définir la structure de la base de données (table utilisateurs, déclencheurs, saisies journalières).
-- Préparer un design préliminaire pour le calendrier et les tableaux de bord.
+**Planification BDD :**
+- Utilisateurs
+- Déclencheurs
+- Saisies journalières
+- Adjectifs émotionnels.
 
 ### 5.2. Développement du backend (API REST)
 
-Mise en place de FastAPI :
+**Mise en place de FastAPI :**
 - Créer un projet FastAPI avec uvicorn pour exécuter le serveur localement.
 - Configurer les routes REST :
     - /register : inscription utilisateur.
-    - /login : connexion et authentification.
-    - /triggers : gestion des déclencheurs.
+    - /login : retour d'un JWT.
+    - /triggers : CRUD sur les déclencheurs.
     - /mood : gestion de l'humeur du chien.
     - /daily-entry : enregistrement des données journalières.
-    - /analytics : affichage des visualisations.
+    - /analytics : récupération de données agrégées.
+    - /search : requête Elasticsearch.
 
-Base de données SQLite :
+**Base de données SQLite :**
 - Modéliser les tables avec SQLAlchemy :
     - User : identifiants utilisateur.
     - Trigger : liste des déclencheurs (nom, description).
@@ -178,73 +178,85 @@ Base de données SQLite :
     - Adjectives : humeur du chien dans la journée.
 - Initialiser la base et inclure des déclencheurs par défaut.
 
-Sécurisation des API :
+**Sécurisation des API :**
 - Ajouter des tokens JWT pour gérer les sessions utilisateurs.
-- Stocker les secrets et clés dans Vault.
+- Stocker les secrets et clés dans Vault (V2).
 
-Intégration Elasticsearch :
-- Installer et configurer un conteneur Elasticsearch via Docker.
-- Créer une fonction de synchronisation entre les données de la base SQL et l’index Elasticsearch (ex. : chaque nouvelle saisie ou modification alimente aussi l’index).
-- Exposer une API /search permettant de requêter Elasticsearch à partir de Streamlit.
-- Indexer les champs suivants : date, adjectifs, déclencheurs, intensité, commentaire libre (si ajouté).
+**Intégration Elasticsearch :**
+- Docker local.
+- Indexation automatique des nouvelles saisies.
+- Requêtes filtrées exposées via /search.
 
-### 5.3. Développement du frontend (Interface utilisateur)
+### 5.3. Développement du frontend (Interface utilisateur Streamlit)
 
-Mise en place de Streamlit :
+**Structure de l'app :**
 - Créer un script principal app.py.
 - Implémenter les pages principales :
-    - Page Calendrier : formulaire interactif pour saisir ou consulter les données.
-    - Page Analytics : intégrer les visualisations Power BI et une barre de recherche.
+    - Accueil/Connexion
+    - Calendrier
+    - Saisie
+    - Analytics
+    - Recherche
 
-Intégration des fonctionnalités :
-- Appeler les API FastAPI pour récupérer et enregistrer les données.
-- Construire un formulaire utilisateur intuitif pour gérer les déclencheurs et adjectifs.
+**Appels API :**
+- Connexion à FastAPI via requêtes HTTP (lib requests).
+- Stockage local du JWT pour les appels sécurisés.
 
 ### 5.4. Analyse des données (Power BI)
 
-Création des tableaux de bord :
-- Connecter Power BI à la BDD.
-- Concevoir :
-    - Histogramme des déclencheurs (par intensité).
-    - Diagramme circulaire pour les adjectifs (répartition).
-    - Graphique linéaire des tendances temporelles.
-    - Jauge ou cercle (%) de réactivité sur le mois
-
-Publication locale :
-- Exporter les graphiques en HTML ou JPG.
+- Création de dashboards dans Power BI.
+- Publication de graphiques avec Matplotlib ou Plotly.
+- Graphiques interactifs sur PowerBi Service.
+- Export PDF des données.
 
 ### 5.5. Automatisation DevOps
 
-Pipeline CI/CD :
+**Conteneurisation :**
+- Écrire un Dockerfile pour le backend et l’interface Streamlit.
+- Construire et tester l’image localement.
+
+**Pipeline CI/CD :**
 - Configurer GitHub Actions pour :
     - Lancer des tests unitaires (FastAPI).
     - Construire une image Docker et déployer sur le cloud.
 
-Infrastructure as Code :
-- Utiliser Terraform pour configurer le cloud :
-    - Créer dynamiquement les instances nécessaires.
-    - Intégrer les secrets via Vault.
+## 6. Application V2
 
-Conteneurisation :
-- Écrire un Dockerfile pour le backend et l’interface Streamlit.
-- Construire et tester l’image localement.
+### 6.1. Automatisation DevOps
 
-### 5.6. Déploiement
+**Infrastructure as Code :**
+- Utilisation de Terraform pour automatiser la création et la gestion des ressources cloud sur Oracle Cloud Infrastructure (OCI).
+- Provisionnement automatisé :
+    - Déploiement de machines virtuelles ou services managés.
+    - Création des ressources réseau nécessaires (VPC, Load Balancer, etc.).
+    - Configuration du cluster K3s pour l’orchestration des conteneurs.
+- Intégration de Vault pour la gestion centralisée et sécurisée des secrets (API keys, tokens JWT, identifiants DB…).
 
-Configuration cloud :
-- Créer une application sur le cloud choisi et lier le dépôt GitHub.
-- Déployer via Docker ou le CLI.
+### 6.2. Déploiement cloud
 
-Tests finaux :
-- Vérifier le fonctionnement sur ordinateur et smartphone.
-- Tester les visualisations Power BI et la saisie dans le calendrier.
+**Architecture cloud-native sur Oracle Cloud :**
+- Déploiement de l’application dans un cluster K3s :
+    - Backend (FastAPI) et Frontend (Streamlit) déployés dans des conteneurs gérés par K3s.
+    - Base de données migrée de SQLite vers Oracle Database pour assurer une meilleure scalabilité et intégration avec l’écosystème OCI.
+    - Configuration des services via des fichiers Helm Charts ou manifests YAML.
+    - Utilisation d’Ingress Controller (Traefik) pour gérer les points d’entrée et le routage HTTP/HTTPS.
+- Alerting possible en cas d’erreurs critiques ou d’indisponibilité.
 
-## 6. Maintenance et évolutions futures
+### 6.3. Monitoring
 
-Surveillance : Utiliser les logs du cloud pour surveiller les erreurs. </br>
-Améliorations possibles :
+- Mise en place d’un système de supervision avec :
+    - Prometheus pour collecter les métriques des conteneurs (CPU, mémoire, erreurs, etc.).
+    - Grafana pour visualiser les métriques et détecter les anomalies ou baisses de performance via des dashboards dynamiques.
+- Grafana
+
+## 7. Maintenance et évolutions futures
+
+**Surveillance continue :**
+- Analyse des logs applicatifs et système via les outils natifs d'Oracle Cloud et Grafana.
+- Mise en place d’un système de rotation et d’archivage des logs.
+
+**Améliorations possibles :**
 - Ajouter des notifications (ex. : rappel de saisie quotidienne).
 - Étendre l’analyse avec des graphiques supplémentaires.
-- Migrer vers une base de données plus robuste (PostgreSQL) si le volume augmente.
 - Ajouter une page Médicaments (rappel, liste de médicaments, dosage).
 - Ajouter une page suivi des déplacements : carte sur laquelle l'utilisateur signale le début et la fin d'une balade, afin d'évaluer si la distance ou la durée de la balade augmente ou diminue.
