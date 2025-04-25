@@ -16,7 +16,6 @@ Ce projet est destiné à un usage personnel et mis en place pour l'observation 
 - Permettre la recherche avancée via Elasticsearch dans la base de données.
 - Garantir un accès simple et gratuit à l’application.
 - Appliquer des outils DevOps ((CI/CD, containerisation, sécurité, IaC).
-- Offrir un usage multiplateforme (PC / smartphone).
 - Préparer l’extension cloud native pour un futur déploiement.
 
 ### 1.3. Exemple de scénario utilisateur
@@ -70,7 +69,6 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
 - Application gratuite à concevoir et à utiliser.
 - Données sécurisées et accessibles uniquement à l’utilisateur.
 - Interface simplifiée, intuitive.
-- Compatible PC et smartphone.
 
 ## 3. Spécifications techniques
 
@@ -165,7 +163,6 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
     - /register : inscription utilisateur.
     - /login : retour d'un JWT.
     - /triggers : CRUD sur les déclencheurs.
-    - /mood : gestion de l'humeur du chien.
     - /daily-entry : enregistrement des données journalières.
     - /analytics : récupération de données agrégées.
     - /search : requête Elasticsearch.
@@ -175,7 +172,7 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
     - User : identifiants utilisateur.
     - Trigger : liste des déclencheurs (nom, description).
     - DailyEntry : données journalières (date, intensité, adjectifs, utilisateur lié).
-    - Adjectives : humeur du chien dans la journée.
+    - Reaction : humeur du chien dans la journée.
 - Initialiser la base et inclure des déclencheurs par défaut.
 
 **Sécurisation des API :**
@@ -256,6 +253,7 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
 - Mise en place d’un système de rotation et d’archivage des logs.
 
 **Améliorations possibles :**
+- Compatible PC et smartphone
 - Ajouter des notifications (ex. : rappel de saisie quotidienne).
 - Étendre l’analyse avec des graphiques supplémentaires.
 - Ajouter une page Médicaments (rappel, liste de médicaments, dosage).
