@@ -1,0 +1,8 @@
+from sqlalchemy import Column, Integer, String
+from app.database import Base
+
+class Trigger(Base):
+    __tablename__ = "triggers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
