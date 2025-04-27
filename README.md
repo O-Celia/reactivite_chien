@@ -32,11 +32,12 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ## 📂 Arborescence du projet
 
 ```bash
-├── api/                  # Backend FastAPI
+├── app/                  # Backend FastAPI
 ├── streamlit_app/        # Frontend Streamlit
 ├── infra/                # Infra as Code
 ├── tests/                # Tests unitaires
-├── data/                 # Fichiers de données (ex: CSV pour import)
+├── data/                 # Fichiers de données (SQLite)
+├── sql/                  # Fichiers de données MySQL
 ├── .github/workflows/    # CI/CD GitHub Actions
 ├── docker-compose.yml
 ├── Dockerfile.api
