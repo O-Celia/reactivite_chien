@@ -5,7 +5,7 @@
 ### 1.1. Contexte
 
 Ce projet a été conçu pour répondre à un besoin personnel : suivre les comportements réactifs des chiens déclenchés par des facteurs externes (ex. : bruits, autres animaux, humains, etc.). Ce projet vise à concevoir une application pour suivre ces déclencheurs et leur intensité, ainsi que l’état émotionnel du chien, pour observer des tendances via des tableaux de bord et identifier des pistes d’amélioration.
-Ce projet est destiné à un usage personnel et mis en place pour l'observation de mon chien et de celui d'une amie. L'application est donc à ce jour prévue pour une utilisation limitée. L’application a pour but d'être utilisée sur PC et mobile.
+Ce projet est destiné à un usage personnel et mis en place pour l'observation de mon chien et de celui d'une amie. L'application est donc à ce jour prévue pour une utilisation limitée. L’application a pour but d'être utilisée sur PC.
 
 ### 1.2. Objectifs
 
@@ -20,7 +20,7 @@ Ce projet est destiné à un usage personnel et mis en place pour l'observation 
 
 ### 1.3. Exemple de scénario utilisateur
 
-L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité élevée) et semblait agité. En fin de semaine, il consulte le dashboard pour voir les déclencheurs les plus fréquents.
+L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd’hui, son chien a réagi à un autre chien (intensité 3/5) et met en commentaire qu'il semblait agité en début de balade. En fin de semaine, il consulte le dashboard pour voir les déclencheurs les plus fréquents.
 
 ### 1.4 MVP (Version 1) :
 
@@ -60,9 +60,6 @@ L'utilisateur se connecte à l’application sur son smartphone. Il saisit qu’
 **Recherche intelligente :**
 - Recherche via Elasticsearch : filtres sur les déclencheurs, adjectifs, intensité et dates.
 - Interface simple type barre de recherche + filtres.
-
-**Multi-plateforme :**
-- Application utilisable sur ordinateur et mobile (navigateur web).
 
 ### 2.2. Contraintes fonctionnelles
 

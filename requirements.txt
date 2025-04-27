@@ -5,3 +5,4 @@ pydantic
 pytz
 pytest
 httpx
+streamlit
