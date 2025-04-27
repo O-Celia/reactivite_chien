@@ -1,10 +1,10 @@
-# 🐾 Reactive Dog Tracker
+# 🐾 Reactive Dog Tracker 🐾
 
 Application de suivi des chiens réactifs, permettant de centraliser les déclencheurs, réactions, observations et progressions comportementales, à des fins d’analyse et de visualisation.
 
 ---
 
-## 🎯 Objectifs
+## Objectifs
 
 ### V1 – Projet local démontrant mes compétences :
 - Backend API REST avec **FastAPI**
@@ -29,14 +29,15 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 
 ---
 
-## 📂 Arborescence du projet
+## Arborescence du projet
 
 ```bash
-├── api/                  # Backend FastAPI
+├── app/                  # Backend FastAPI
 ├── streamlit_app/        # Frontend Streamlit
 ├── infra/                # Infra as Code
 ├── tests/                # Tests unitaires
-├── data/                 # Fichiers de données (ex: CSV pour import)
+├── data/                 # Fichiers de données (SQLite)
+├── sql/                  # Fichiers de données MySQL
 ├── .github/workflows/    # CI/CD GitHub Actions
 ├── docker-compose.yml
 ├── Dockerfile.api
@@ -45,27 +46,27 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ```
 ---
 
-## 🚀 Lancement local (V1)
+## Lancement local (V1)
 
 ```bash
 # Lancer l'application complète
 docker-compose up --build
 ```
 
-## 📊 Dashboard Power BI
+## Dashboard Power BI
 
 L'application propose un lien vers un tableau de bord Power BI interactif permettant de suivre :
 - La fréquence des déclencheurs
 - L’évolution des réactions
 - Des statistiques comportementales dans le temps
 
-## 🧪 Tests
+## Tests
 
 ```bash
 pytest tests/
 ```
 
-## 🌐 Technologies utilisées
+## Technologies utilisées
 
 | **Type**          | **Stack**                                                |
 |-------------------|----------------------------------------------------------|
@@ -79,6 +80,6 @@ pytest tests/
 
 ---
 
-## 🔜 Expansion (V2 – cloud ready)
+## Expansion (V2 – cloud ready)
 
 Voir /infra/README.md pour le diagramme de l’architecture cible et les premiers fichiers Terraform.
