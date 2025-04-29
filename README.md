@@ -43,17 +43,9 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── Dockerfile.api
 ├── Dockerfile.streamlit
 ├── README.md
-├── main.py               # Point d'entrée de l'API FastAPI
-├── requirements.txt      # Dépendances Python de l'application
 ├── Cahier des charges.md
 ├── .gitignore
 ```
-
-## Fichiers importants
-
-- main.py : point d’entrée de l’API FastAPI. Il initialise l’application, crée la base de données via SQLAlchemy et monte les routes principales (users, triggers, reactions, entries).
-- requirements.txt : contient toutes les dépendances nécessaires à l’exécution de l’application (FastAPI, SQLAlchemy, Streamlit, Plotly, etc.).
-
 ---
 
 ## Lancement local (V1)
