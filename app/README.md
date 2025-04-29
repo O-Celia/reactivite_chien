@@ -30,7 +30,7 @@ app/
     └── user.py
 ```
 
-## Configuration de la base de données – database.py
+## Configuration de la base de données – *database.py*
 
 Utilise **SQLAlchemy** avec une base SQLite locale :
 
