@@ -18,21 +18,6 @@ def create_daily_entry(db: Session, entry: DailyEntryCreate):
     db.add(db_entry)
     db.commit()
     db.refresh(db_entry)
-
-    # if entry.triggers:
-    #     for trigger_id in entry.triggers:
-    #         trigger = db.query(Trigger).filter(Trigger.id == trigger_id).first()
-    #         if trigger:
-    #             db_entry.triggers.append(trigger)
-
-    # if entry.reactions:
-    #     for reaction_id in entry.reactions:
-    #         reaction = db.query(Reaction).filter(Reaction.id == reaction_id).first()
-    #         if reaction:
-    #             db_entry.reactions.append(reaction)
-
-    # db.commit()
-    # db.refresh(db_entry)
     
     # Pour les triggers
     if entry.triggers:
@@ -107,8 +92,7 @@ def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdat
     
     if not db_entry:
         raise HTTPException(status_code=404, detail="Entry not found")
-    
-    # if db_entry:
+
     if entry_update.entry_date:
         db_entry.entry_date = entry_update.entry_date
     if entry_update.severity is not None:
@@ -118,10 +102,6 @@ def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdat
 
     if entry_update.triggers is not None:
         db_entry.triggers.clear()
-        # for trigger_id in entry_update.triggers:
-        #     trigger = db.query(Trigger).filter(Trigger.id == trigger_id).first()
-        #     if trigger:
-        #         db_entry.triggers.append(trigger)
         for trigger_name in entry_update.triggers:
             trigger_name = trigger_name.strip().lower()
             trigger = db.query(Trigger).filter(Trigger.name == trigger_name).first()
@@ -134,10 +114,6 @@ def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdat
 
     if entry_update.reactions is not None:
         db_entry.reactions.clear()
-        # for reaction_id in entry_update.reactions:
-        #     reaction = db.query(Reaction).filter(Reaction.id == reaction_id).first()
-        #     if reaction:
-        #         db_entry.reactions.append(reaction)
         for reaction_name in entry_update.reactions:
             reaction_name = reaction_name.strip().lower()
             reaction = db.query(Reaction).filter(Reaction.name == reaction_name).first()

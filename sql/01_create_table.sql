@@ -9,7 +9,7 @@ CREATE TABLE daily_entries (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     entry_date DATE NOT NULL,
-    severity INT CHECK (severity BETWEEN 1 AND 10),
+    severity INT CHECK (severity BETWEEN 1 AND 5),
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
