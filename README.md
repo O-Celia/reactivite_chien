@@ -45,6 +45,8 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── README.md
 ├── main.py
 ├── requirements.txt
+├── Cahier des charges.md
+├── .gitignore
 ```
 ---
 
