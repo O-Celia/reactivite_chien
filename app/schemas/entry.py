@@ -8,8 +8,8 @@ class DailyEntryBase(BaseModel):
     comment: Optional[str] = None
 
 class DailyEntryCreate(DailyEntryBase):
-    triggers: List[int]
-    reactions: List[int]
+    triggers: List[str]
+    reactions: List[str]
     user_id: int
 
 class DailyEntryRead(DailyEntryBase):
@@ -26,8 +26,8 @@ class DailyEntryUpdate(BaseModel):
     entry_date: Optional[date] = None
     severity: Optional[int] = None
     comment: Optional[str] = None
-    triggers: Optional[List[int]] = None
-    reactions: Optional[List[int]] = None
+    triggers: Optional[List[str]] = None
+    reactions: Optional[List[str]] = None
 
     class ConfigDict:
         from_attributes = True

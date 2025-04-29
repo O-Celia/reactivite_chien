@@ -22,6 +22,13 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 def read_users(db: Session = Depends(get_db)):
     return crud_user.get_users(db)
 
+@user_router.get("/{username}", response_model=UserRead)
+def get_user_by_username(username: str, db: Session = Depends(get_db)):
+    db_user = crud_user.get_user_by_username(db, username)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    return db_user
+
 @user_router.get("/{user_id}", response_model=UserRead)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_id(db, user_id)

@@ -1,8 +1,6 @@
 import streamlit as st
 import requests
 
-st.title("Mon Suivi de Réactivité")
-
 # username = st.text_input("Nom d'utilisateur")
 # password = st.text_input("Mot de passe", type="password")
 
@@ -19,20 +17,27 @@ import dataentry
 import analysis
 import calender
 import research
+import modifyentry
+import deleteentry
 
 # Dictionnaire pour la navigation
 PAGES = {
     "Accueil": Home,
-    "Nouvelle entrée": dataentry,
-    "Analyses": analysis,
+    "Recherches": research,
     "Calendrier": calender,
-    "Recherches": research
+    "Nouvelle entrée": dataentry,
+    "Modifier entrée": modifyentry,
+    "Supprimer entrée": deleteentry,
+    "Analyses": analysis
 }
 
-# Sidebar pour choisir la page
-st.sidebar.title("Navigation")
-selection = st.sidebar.radio("Aller vers :", list(PAGES.keys()))
+def app():
+    st.sidebar.title("Navigation")
 
-# Afficher la page sélectionnée
-page = PAGES[selection]
-page.app()
+    selection = st.sidebar.selectbox("Aller vers :", list(PAGES.keys()))
+
+    page = PAGES[selection]
+    page.app()
+
+if __name__ == "__main__":
+    app()

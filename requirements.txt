@@ -5,4 +5,6 @@ pydantic
 pytz
 pytest
 httpx
-streamlit
+streamlit>=1.25.0
+streamlit_calendar
+plotly
