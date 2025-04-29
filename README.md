@@ -43,6 +43,8 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── Dockerfile.api
 ├── Dockerfile.streamlit
 ├── README.md
+├── main.py
+├── requirements.txt
 ```
 ---
 
