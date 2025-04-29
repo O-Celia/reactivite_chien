@@ -62,12 +62,6 @@ L'application propose un lien vers un tableau de bord Power BI interactif permet
 - L’évolution des réactions
 - Des statistiques comportementales dans le temps
 
-## Tests
-
-```bash
-pytest tests/
-```
-
 ## Technologies utilisées
 
 | **Type**          | **Stack**                                                |
