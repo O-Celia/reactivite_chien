@@ -24,7 +24,10 @@ app/
 │   ├── trigger.py
 │   └── user.py
 └── routes/             # Endpoints FastAPI (à intégrer dans l’API principale)
-    └── ...
+    ├── entry.py
+    ├── reaction.py
+    ├── trigger.py
+    └── user.py
 ```
 
 ## Configuration de la base de données – database.py
