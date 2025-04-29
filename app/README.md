@@ -24,10 +24,12 @@ app/
 │   ├── trigger.py
 │   └── user.py
 └── routes/             # Endpoints FastAPI (à intégrer dans l’API principale)
-    ├── entry.py
-    ├── reaction.py
-    ├── trigger.py
-    └── user.py
+│   ├── entry.py
+│   ├── reaction.py
+│   ├── trigger.py
+│   └── user.py
+├── main.py             # Point d'entrée de l'API FastAPI
+└── requirements.txt    # Dépendances Python de l'application
 ```
 
 ## Configuration de la base de données – *database.py*
@@ -52,7 +54,7 @@ Les relations sont gérées avec des tables d’association (entry_trigger, entr
 
 ## Fonctions CRUD – *crud/*
 
-### crud/entry.py
+### entry.py
 
 - create_daily_entry : crée une entrée journalière avec triggers et réactions associés
 - get_daily_entries : récupère toutes les entrées
@@ -60,18 +62,10 @@ Les relations sont gérées avec des tables d’association (entry_trigger, entr
 - update_daily_entry : met à jour une entrée
 - delete_daily_entry : supprime une entrée
 
-### crud/reaction.py
+### reaction.py, trigger.py, user.py
 
-Fonctions standard : create, read, update, delete pour Reaction
-
-### crud/trigger.py
-
-Fonctions standard : create, read, update, delete pour Trigger
-
-### crud/user.py
-
-Fonctions standard : create, read, update, delete pour User
-- Ajout d’un getter par username (en attendant que l'authentification des utilisateurs soit ajoutée)
+Fonctions standard : create, read, update, delete
+**user.py** inclut aussi une fonction pour récupérer un utilisateur par username (en attendant l'ajout de l’authentification).
 
 ## Schémas Pydantic – *schemas/*
 
@@ -94,6 +88,33 @@ Même logique pour les routes triggers/, reactions/, users/.
 
 ## Données
 
-Les données sont stockées dans un fichier SQLite :
+Les données sont stockées localement dans un fichier SQLite :
 ```bash
 /data/db.sqlite3
+```
+
+## Initialisation
+
+- main.py : point d’entrée de l’API FastAPI. Il initialise l’application, crée la base de données via SQLAlchemy et monte les routes principales (users, triggers, reactions, entries).
+- requirements.txt : contient toutes les dépendances nécessaires à l’exécution de l’application (FastAPI, SQLAlchemy, Streamlit, Plotly, etc.).
+
+## Lancer l'application
+
+**1. Création d'un environnement virtuel**
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**2. Installer les dépendances**
+
+```bash
+pip install -r requirements.txt
+```
+
+**3. Lancer l'API**
+
+```bash
+uvicorn main:app --reload
+```
