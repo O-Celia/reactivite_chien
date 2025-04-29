@@ -4,6 +4,7 @@ Ce dossier contient la logique principale de l'API FastAPI qui permet de gérer 
 
 ## Arborescence
 
+```bash
 app/
 │
 ├── database.py         # Configuration SQLAlchemy et moteur de base de données
@@ -24,6 +25,7 @@ app/
 │   └── user.py
 └── routes/             # Endpoints FastAPI (à intégrer dans l’API principale)
     └── ...
+```
 
 ## Configuration de la base de données – database.py
 
