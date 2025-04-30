@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Table, Date, DateTime
 from sqlalchemy.orm import relationship
-from app.database import Base
+from database import Base
 from datetime import datetime
 import pytz
-from app.models.trigger import Trigger
-from app.models.reaction import Reaction
-from app.models.user import User
+from models.trigger import Trigger
+from models.reaction import Reaction
+from models.user import User
 
 def get_paris_time():
     paris_tz = pytz.timezone("Europe/Paris")

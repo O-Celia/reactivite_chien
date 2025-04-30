@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.crud import trigger as crud_trigger
-from app.schemas.trigger import TriggerCreate, TriggerRead, TriggerUpdate
+from database import SessionLocal
+from crud import trigger as crud_trigger
+from schemas.trigger import TriggerCreate, TriggerRead, TriggerUpdate
 from typing import List
 
 trigger_router = APIRouter()

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.routes import user, trigger, reaction, entry
-from app.database import Base, engine
+from routes import user, trigger, reaction, entry
+from database import Base, engine
 
 Base.metadata.create_all(bind=engine)
 

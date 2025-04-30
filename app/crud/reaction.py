@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.reaction import Reaction
-from app.schemas.reaction import ReactionCreate, ReactionUpdate
+from models.reaction import Reaction
+from schemas.reaction import ReactionCreate, ReactionUpdate
 
 def create_reaction(db: Session, reaction: ReactionCreate):
     db_reaction = Reaction(name=reaction.name)

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.trigger import Trigger
-from app.schemas.trigger import TriggerCreate, TriggerUpdate
+from models.trigger import Trigger
+from schemas.trigger import TriggerCreate, TriggerUpdate
 
 def create_trigger(db: Session, trigger: TriggerCreate):
     db_trigger = Trigger(name=trigger.name)

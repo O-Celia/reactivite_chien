@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.crud import reaction as crud_reaction
-from app.schemas.reaction import ReactionCreate, ReactionRead, ReactionUpdate
+from database import SessionLocal
+from crud import reaction as crud_reaction
+from schemas.reaction import ReactionCreate, ReactionRead, ReactionUpdate
 from typing import List
 
 reaction_router = APIRouter()

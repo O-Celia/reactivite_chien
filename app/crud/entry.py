@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.models.entry import DailyEntry, Trigger, Reaction, User
-from app.schemas.entry import DailyEntryCreate, DailyEntryRead, DailyEntryUpdate
+from models.entry import DailyEntry, Trigger, Reaction, User
+from schemas.entry import DailyEntryCreate, DailyEntryRead, DailyEntryUpdate
 
 def create_daily_entry(db: Session, entry: DailyEntryCreate):
     
