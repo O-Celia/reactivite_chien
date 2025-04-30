@@ -22,7 +22,7 @@ def create_daily_entry(db: Session, entry: DailyEntryCreate):
     # Pour les triggers
     if entry.triggers:
         for trigger_name in entry.triggers:
-            trigger_name = trigger_name.lower().replace(" ", "_")
+            trigger_name = trigger_name.lower()
             trigger = db.query(Trigger).filter(Trigger.name == trigger_name).first()
             if not trigger:
                 trigger = Trigger(name=trigger_name)
@@ -34,7 +34,7 @@ def create_daily_entry(db: Session, entry: DailyEntryCreate):
     # Pour les reactions
     if entry.reactions:
         for reaction_name in entry.reactions:
-            reaction_name = reaction_name.lower().replace(" ", "_")
+            reaction_name = reaction_name.lower()
             reaction = db.query(Reaction).filter(Reaction.name == reaction_name).first()
             if not reaction:
                 reaction = Reaction(name=reaction_name)

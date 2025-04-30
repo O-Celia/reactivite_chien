@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from streamlit_calendar import calendar
+from datetime import datetime
 
 def app():
     st.title("Calendrier de réactivité")
@@ -16,6 +17,8 @@ def app():
 
     # Transformer les données pour le calendrier
     events = []
+    filtered_data = []
+    
     for entry in data:
         reaction_text = ", ".join(entry["reactions"]) if isinstance(entry["reactions"], list) else entry["reactions"]
         trigger_text = ", ".join(entry["triggers"]) if isinstance(entry["triggers"], list) else entry["triggers"]
@@ -26,6 +29,9 @@ def app():
             background_color = '#FFA500'  # Orange
         else:
             background_color = '#F44336'  # Rouge
+            
+        date_str = entry["entry_date"]
+        date_obj = datetime.fromisoformat(date_str)
 
         events.append({
             "title": f"{trigger_text}",
@@ -36,6 +42,16 @@ def app():
             "severity": entry['severity'],
             "ID" : entry["id"]
         })
+        
+        filtered_data.append({
+            "date_obj": date_obj,
+            "start": date_str,
+            "title": trigger_text,
+            "description": f"Réaction : {reaction_text}",
+            "severity": entry["severity"],
+            "backgroundColor": background_color,
+            "ID": entry["id"]
+        })
 
     #Configuration du calendrier
     calendar_options = {
@@ -45,12 +61,35 @@ def app():
 
     calendar(events=events, options=calendar_options)
 
+    st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("---")
+    
+    # Sélecteur de mois uniquement pour filtrer l'expander
+    # Pour extraire les années présentes dans les données
+    available_years = sorted({e["date_obj"].year for e in filtered_data})
+    months = list(range(1, 13))
+    month_names = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+
+    col1, col2 = st.columns(2)
+    with col1:
+        selected_year = st.selectbox("Année", available_years, index=available_years.index(datetime.today().year))
+    with col2:
+        selected_month_num = st.selectbox("Mois", months, index=datetime.today().month - 1, format_func=lambda m: month_names[m - 1])
+
             
+    # Affichage filtré dans l'expander
     with st.expander("Informations supplémentaires sous forme de liste"):
-        for event in events:
-            color = event.get("backgroundColor", "#000000")
-            st.markdown(
-                f"<span style='color:{color};'><strong>{event['start']}</strong></span> : {event['title']} ({event['severity']}/5) — {event['description']}, ID : {event['ID']}",
-                unsafe_allow_html=True
-            )
+        filtered_events = [
+            e for e in filtered_data
+            if e["date_obj"].month == selected_month_num and e["date_obj"].year == selected_year
+        ]
+
+        if filtered_events:
+            for event in filtered_events:
+                color = event.get("backgroundColor", "#000000")
+                st.markdown(
+                    f"<span style='color:{color};'><strong>{event['start']}</strong></span> : {event['title']} ({event['severity']}/5) — {event['description']}, ID : {event['ID']}",
+                    unsafe_allow_html=True
+                )
+        else:
+            st.info("Aucune entrée pour le mois sélectionné.")

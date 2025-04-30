@@ -7,67 +7,88 @@ API_URL = "http://localhost:8000"
 def app():
     st.title("Nouvelle observation")
 
-    # Saisie de l'utilisateur (temporaire, remplacé plus tard par l'auth)
-    username = st.text_input("Nom d'utilisateur")
+    # Valeurs par défaut
+    defaults = {
+        "username": "",
+        "entry_date": datetime.date.today(),
+        "severity": 3,
+        "comment": "",
+        "existing_trigger": "",
+        "new_trigger": "",
+        "existing_reaction": "",
+        "new_reaction": "",
+        "reset_triggered": False,  # Flag pour réinitialiser
+    }
 
-    # Date de l'observation
-    entry_date = st.date_input("Date de l'observation", value=datetime.date.today())
+    # Initialisation des clés en session_state, sauf si déjà instanciées par un widget
+    for key, default in defaults.items():
+        st.session_state.setdefault(key, default)
 
-    severity = st.slider("Niveau de gravité (1 = léger, 5 = intense)", 1, 5, 3)
-    comment = st.text_area("Commentaire")
+    # Si le flag de réinitialisation est activé, réinitialiser session_state
+    if st.session_state.get("reset_triggered"):
+        for key, default in defaults.items():
+            if key != "reset_triggered":  # Ne pas réinitialiser le flag
+                st.session_state[key] = default
+        st.session_state["reset_triggered"] = False  # Réinitialiser le flag
 
-    # Récupération des déclencheurs et réactions existants via API
+    # Interface utilisateur
+    st.text_input("Nom d'utilisateur", key="username")
+    st.date_input("Date de l'observation", key="entry_date")
+    st.slider("Niveau de gravité (1 = léger, 5 = intense)", 1, 5, key="severity")
+    st.text_area("Commentaire", key="comment")
+
+    # Récupération des options
     try:
-        triggers_resp = requests.get(f"{API_URL}/triggers/")
-        reactions_resp = requests.get(f"{API_URL}/reactions/")
-        triggers = triggers_resp.json() if triggers_resp.status_code == 200 else []
-        reactions = reactions_resp.json() if reactions_resp.status_code == 200 else []
-        triggers_list = [t['name'] for t in triggers]
-        reactions_list = [r['name'] for r in reactions]
+        triggers = requests.get(f"{API_URL}/triggers/").json()
+        reactions = requests.get(f"{API_URL}/reactions/").json()
     except:
-        st.error("Erreur de récupération des déclencheurs/réactions.")
-        triggers_list = []
-        reactions_list = []
+        triggers = []
+        reactions = []
 
-    st.subheader("Déclencheurs")
-    existing_trigger = st.selectbox("Déclencheur existant :", [""] + triggers_list)
-    new_trigger = st.text_input("...ou ajouter un nouveau déclencheur")
+    trigger_names = [""] + [t["name"] for t in triggers]
+    reaction_names = [""] + [r["name"] for r in reactions]
 
-    st.subheader("Réactions observées")
-    existing_reaction = st.selectbox("Réaction existante :", [""] + reactions_list)
-    new_reaction = st.text_input("...ou ajouter une nouvelle réaction")
+    st.selectbox("Déclencheur existant :", trigger_names, key="existing_trigger")
+    st.text_input("...ou ajouter un nouveau déclencheur", key="new_trigger")
 
-    if st.button("Soumettre l'observation"):
-        # Identification de l'utilisateur
-        user_resp = requests.get(f"{API_URL}/users/{username}")
-        if user_resp.status_code != 200:
-            st.error("Utilisateur non trouvé.")
-            return
-        user_id = user_resp.json().get("id")
+    st.selectbox("Réaction existante :", reaction_names, key="existing_reaction")
+    st.text_input("...ou ajouter une nouvelle réaction", key="new_reaction")
 
-        # Détermination du déclencheur
-        trigger_final = new_trigger.strip() if new_trigger.strip() else existing_trigger
-        reaction_final = new_reaction.strip() if new_reaction.strip() else existing_reaction
+    # Boutons en bas : deux colonnes
+    col1, col2 = st.columns([1, 1])
 
-        # Vérification
-        if not trigger_final or not reaction_final:
-            st.warning("Merci de renseigner au moins un déclencheur ET une réaction.")
-            return
+    with col1:
+        if st.button("Soumettre l'observation"):
+            try:
+                user_resp = requests.get(f"{API_URL}/users/{st.session_state.username}")
+                user_id = user_resp.json().get("id")
+            except:
+                st.error("Utilisateur non trouvé.")
+                return
 
-        # Construction du payload
-        payload = {
-            "user_id": user_id,
-            "entry_date": str(entry_date),
-            "severity": severity,
-            "comment": comment,
-            "triggers": [trigger_final],
-            "reactions": [reaction_final]
-        }
+            trigger = st.session_state.new_trigger.strip() or st.session_state.existing_trigger
+            reaction = st.session_state.new_reaction.strip() or st.session_state.existing_reaction
 
-        response = requests.post(f"{API_URL}/entry/", json=payload)
+            if not trigger or not reaction:
+                st.warning("Merci de renseigner au moins un déclencheur ET une réaction.")
+                return
 
-        if response.status_code in [200, 201]:
-            st.success("Observation enregistrée avec succès.")
-        else:
-            st.error(f"Erreur lors de l'enregistrement : {response.text}")
+            payload = {
+                "user_id": user_id,
+                "entry_date": str(st.session_state.entry_date),
+                "severity": st.session_state.severity,
+                "comment": st.session_state.comment,
+                "triggers": [trigger],
+                "reactions": [reaction],
+            }
 
+            resp = requests.post(f"{API_URL}/entry/", json=payload)
+            if resp.status_code in [200, 201]:
+                st.success("Observation enregistrée avec succès.")
+            else:
+                st.error(f"Erreur lors de l'enregistrement : {resp.text}")
+
+    with col2:
+        if st.button("Réinitialiser"):
+            st.session_state["reset_triggered"] = True
+            st.rerun()

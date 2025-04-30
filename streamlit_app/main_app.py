@@ -17,18 +17,18 @@ import dataentry
 import analysis
 import calender
 import research
-import modifyentry
-import deleteentry
+import adminentry
+import admin
 
 # Dictionnaire pour la navigation
 PAGES = {
     "Accueil": Home,
-    "Recherches": research,
-    "Calendrier": calender,
     "Nouvelle entrée": dataentry,
-    "Modifier entrée": modifyentry,
-    "Supprimer entrée": deleteentry,
-    "Analyses": analysis
+    "Calendrier": calender,
+    "Recherches": research,
+    "Analyses graphiques": analysis,
+    "Gestion des entrées" : adminentry,
+    "Administration" : admin
 }
 
 def app():
