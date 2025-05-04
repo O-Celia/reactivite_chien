@@ -1,356 +1,192 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
+import requests
 from datetime import datetime
-import os
-import calendar
+import plotly.graph_objects as go
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(BASE_DIR, "data", "db.sqlite3")
+API_BASE_URL = "http://localhost:8000"
 
 def app():
-    st.title("Analyses")
-
-    # Connexion à la base de données
-    conn = sqlite3.connect(DB_PATH)
+    st.title("Analyse de la réactivité")
     
-    st.sidebar.title("Filtrer par période")
-    periode = st.sidebar.selectbox(
-        "Choisissez la période à afficher :",
-        ("Toutes les données", "Cette année", "Ce mois", "Cette semaine", "Personnalisée")
-    )
+    token = st.session_state.get("token")
+    if not token:
+        st.error("Vous devez être connecté pour voir les graphiques d'analyse.")
+        return
 
-    selected_year = None
-    selected_month = None
-
-    where_clause = ""
-    if periode == "Cette année":
-        where_clause = "WHERE strftime('%Y', entry_date) = strftime('%Y', 'now')"
-    elif periode == "Ce mois":
-        where_clause = "WHERE strftime('%Y-%m', entry_date) = strftime('%Y-%m', 'now')"
-    elif periode == "Cette semaine":
-        where_clause = """
-        WHERE strftime('%Y-%W', entry_date) = strftime('%Y-%W', 'now')
-        """
-    elif periode == "Personnalisée":
-        year = st.sidebar.selectbox("Choisissez l'année", [None] + list(range(2000, datetime.now().year + 1)))
-        month = st.sidebar.selectbox("Choisissez le mois", [None] + list(range(1, 13)))
-        week_of_month = st.sidebar.selectbox("Choisissez la semaine du mois (1 à 4)", [None, 1, 2, 3, 4])
-        
-        selected_year = year
-        selected_month = month
-
-        filters = []
-        if year:
-            filters.append(f"strftime('%Y', entry_date) = '{year}'")
-        if month:
-            filters.append(f"strftime('%m', entry_date) = '{month:02d}'")
-        if week_of_month:
-            # Calcul semaine du mois : on prend le jour du mois, le divise par 7 et arrondit
-            filters.append(f"CAST(strftime('%d', entry_date) AS INTEGER) BETWEEN {(week_of_month - 1) * 7 + 1} AND {week_of_month * 7}")
-
-        if filters:
-            where_clause = "WHERE " + " AND ".join(filters)
-
-    # sinon (Toutes les données), le where_clause reste vide
-
-    # 1. Nombre de déclenchements par intensité
-    st.subheader("Nombre de déclenchements par intensité")
-    query1 = f"""
-    SELECT t.name AS trigger, d.severity
-    FROM daily_entries d
-    JOIN daily_entry_triggers det ON d.id = det.entry_id
-    JOIN triggers t ON t.id = det.trigger_id
-    {where_clause}
-    """
-    df1 = pd.read_sql_query(query1, conn)
-    df1["severity"] = df1["severity"].astype(str)
-    
-    df1 = df1.rename(columns={
-        "trigger": "Déclencheur",
-        "severity": "Intensité"
-    })
-
-    custom_colors = {
-        "1": "#a8dadc",  # bleu très clair
-        "2": "#74c69d",  # vert doux
-        "3": "#f9c74f",  # jaune
-        "4": "#f9844a",  # orange
-        "5": "#f94144",  # rouge foncé
-    }
-    if not df1.empty:
-        fig1 = px.histogram(
-            df1,
-            x="Déclencheur",
-            color="Intensité",
-            barmode="stack",
-            color_discrete_map=custom_colors,
-            category_orders={"Intensité": ["1", "2", "3", "4", "5"]}
-        )
-        fig1.update_layout(
-            xaxis_title="Déclencheur",
-            yaxis_title="Nombre d'occurrences",
-            legend_title="Intensité",
-            bargap=0.2,
-            template="plotly_white"
-        )
-        st.plotly_chart(fig1)
-    else:
-        st.info("Pas de données disponibles pour les déclencheurs.")
-
-    # 2. Diagramme circulaire des réactions
-    st.subheader("Répartition des réactions")
-    query2 = f"""
-    SELECT 
-        r.name AS reaction,
-        COUNT(*) AS count,
-        GROUP_CONCAT(DISTINCT t.name) AS triggers
-    FROM daily_entry_reactions der
-    JOIN reactions r ON der.reaction_id = r.id
-    JOIN daily_entries d ON der.entry_id = d.id
-    JOIN daily_entry_triggers det ON d.id = det.entry_id
-    JOIN triggers t ON det.trigger_id = t.id
-    {where_clause}
-    GROUP BY r.name
-    """
-    
-    df2 = pd.read_sql_query(query2, conn)
-    df2 = df2.rename(columns={
-        "reaction": "Réaction",
-        "count": "Occurrences",
-        "triggers": "Déclencheurs"
-    })
-
-    if not df2.empty:
-        fig2 = px.pie(
-            df2, 
-            names="Réaction", 
-            values="Occurrences", 
-            hover_data=["Déclencheurs"]
-        )
-        fig2.update_traces(textinfo='percent')
-        st.plotly_chart(fig2)
-    else:
-        st.info("Pas de données disponibles pour les réactions.")
-
-    # 3. Graphique de tendance temporelle
-    # Ajoutez cette partie dans la section de filtrage pour la tendance temporelle
-    st.subheader("Tendance de la sévérité dans le temps")
-
-    # Sélection du déclencheur
-    selected_trigger = st.sidebar.selectbox(
-        "Choisissez un déclencheur pour le graphique 'Tendance de la sévérité dans le temps' :",
-        ["Tous les déclencheurs"] + df1["Déclencheur"].unique().tolist()
-    )
-
-    conditions = []
-
-    # Ajoute les conditions de période (from where_clause) si elles existent
-    if where_clause:
-        # Supprimer le mot-clé 'WHERE' pour le réutiliser proprement ensuite
-        conditions.append(where_clause.replace("WHERE", "").strip())
-
-    # Ajoute la condition de déclencheur si un spécifique est choisi
-    if selected_trigger != "Tous les déclencheurs":
-        conditions.append(f"t.name = '{selected_trigger}'")
-
-    # Assemble les conditions finales
-    final_where = ""
-    if conditions:
-        final_where = "WHERE " + " AND ".join(conditions)
-
-    # Construction finale de la requête
-    query3 = f"""
-    SELECT 
-        d.entry_date,
-        AVG(d.severity) AS moyenne_intensité,
-        GROUP_CONCAT(DISTINCT t.name) AS déclencheurs
-    FROM daily_entries d
-    LEFT JOIN daily_entry_triggers det ON d.id = det.entry_id
-    LEFT JOIN triggers t ON t.id = det.trigger_id
-    """
-
-    # Construire dynamiquement les conditions
-    conditions = []
-
-    if where_clause:
-        # where_clause contient déjà WHERE ...
-        conditions.append(where_clause.replace("WHERE", "").strip())
-
-    if selected_trigger != "Tous les déclencheurs":
-        conditions.append(f"t.name = '{selected_trigger}'")
-
-    if conditions:
-        query3 += "WHERE " + " AND ".join(conditions)
-
-    query3 += """
-    GROUP BY d.entry_date
-    ORDER BY d.entry_date
-    """
-
-    # Exécution de la requête
-    df3 = pd.read_sql_query(query3, conn)
-
-    # Affichage du graphique si les données sont présentes
-    if not df3.empty:
-        df3 = df3.rename(columns={
-            "entry_date": "Date",
-            "moyenne_intensité": "Intensité moyenne",
-            "déclencheurs": "Déclencheurs"
-        })
-
-        fig3 = px.line(
-            df3,
-            x="Date",
-            y="Intensité moyenne",
-            hover_data={"Déclencheurs": True},
-            markers=True
-        )
-        fig3.update_layout(
-            xaxis_title="Date",
-            yaxis_title="Intensité moyenne",
-            legend_title="Légende",
-            template="plotly_white"
-        )
-        st.plotly_chart(fig3)
-    else:
-        st.info("Pas de données disponibles pour la tendance temporelle.")
-
-    # st.subheader("Tendance de la sévérité dans le temps")
-
-    # query3 = f"""
-    # SELECT 
-    #     d.entry_date,
-    #     AVG(d.severity) AS moyenne_intensité,
-    #     GROUP_CONCAT(DISTINCT t.name) AS déclencheurs
-    # FROM daily_entries d
-    # LEFT JOIN daily_entry_triggers det ON d.id = det.entry_id
-    # LEFT JOIN triggers t ON t.id = det.trigger_id
-    # {where_clause}
-    # GROUP BY d.entry_date
-    # ORDER BY d.entry_date
-    # """
-
-    # df3 = pd.read_sql_query(query3, conn)
-
-    # if not df3.empty:
-    #     df3 = df3.rename(columns={
-    #         "entry_date": "Date",
-    #         "moyenne_intensité": "Intensité moyenne",
-    #         "déclencheurs": "Déclencheurs"
-    #     })
-
-    #     fig3 = px.line(
-    #         df3,
-    #         x="Date",
-    #         y="Intensité moyenne",
-    #         hover_data={"Déclencheurs": True},
-    #         markers=True
-    #     )
-    #     fig3.update_layout(
-    #         xaxis_title="Date",
-    #         yaxis_title="Intensité moyenne",
-    #         legend_title="Légende",
-    #         template="plotly_white"
-    #     )
-    #     st.plotly_chart(fig3)
-    # else:
-    #     st.info("Pas de données disponibles pour la tendance temporelle.")
-    
-    # 4. Jauge de réactivité mensuelle avec comparaison
-    st.subheader("Réactivité du mois sélectionné (%)")
-
-    # Détermination du mois sélectionné
-    if periode == "Personnalisée":
-        year = st.session_state.get("selected_year", datetime.now().year)
-        month = st.session_state.get("selected_month", datetime.now().month)
-        if selected_year:
-            year = selected_year
-            st.session_state["selected_year"] = selected_year
-        if selected_month:
-            month = selected_month
-            st.session_state["selected_month"] = selected_month
-    else:
-        year = datetime.now().year
-        month = datetime.now().month
-
-    selected_ym = f"{year}-{month:02d}"
-
-    # Mois précédent
-    if month == 1:
-        previous_year = year - 1
-        previous_month = 12
-    else:
-        previous_year = year
-        previous_month = month - 1
-
-    previous_ym = f"{previous_year}-{previous_month:02d}"
-
-    # Mois en français
-    mois_fr = {
-        1: "janvier", 2: "février", 3: "mars", 4: "avril",
-        5: "mai", 6: "juin", 7: "juillet", 8: "août",
-        9: "septembre", 10: "octobre", 11: "novembre", 12: "décembre"
-    }
-    mois_nom = mois_fr[month]
-    mois_precedent_nom = mois_fr[previous_month]
-
-    # Requêtes SQL
-    query_current = f"""
-    SELECT COUNT(*) as total, 
-        SUM(CASE WHEN severity >= 4 THEN 1 ELSE 0 END) as high_severity
-    FROM daily_entries
-    WHERE strftime('%Y-%m', entry_date) = '{selected_ym}'
-    """
-
-    query_previous = f"""
-    SELECT COUNT(*) as total, 
-        SUM(CASE WHEN severity >= 4 THEN 1 ELSE 0 END) as high_severity
-    FROM daily_entries
-    WHERE strftime('%Y-%m', entry_date) = '{previous_ym}'
-    """
-
-    df_current = pd.read_sql_query(query_current, conn)
-    df_previous = pd.read_sql_query(query_previous, conn)
-
-    # Calculs et affichage
-    if not df_current.empty and df_current['total'][0] > 0:
-        current_ratio = df_current['high_severity'][0] / df_current['total'][0] * 100
-
-        if not df_previous.empty and df_previous['total'][0] > 0:
-            previous_ratio = df_previous['high_severity'][0] / df_previous['total'][0] * 100
-            delta_text = f" (vs. {mois_precedent_nom})"
+    # Chargement des données via API FastAPI
+    @st.cache_data
+    def load_data():
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(f"{API_BASE_URL}/entry/", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            df = pd.DataFrame(data)
+            return df
         else:
-            previous_ratio = 0
-            delta_text = f" (vs. {mois_precedent_nom} : NA)"
+            st.error("Erreur lors de la récupération des données depuis l'API.")
+            return pd.DataFrame()
 
-        titre_jauge = f"Proportion d'entrées à haute intensité (≥ 4) pour {mois_nom}{delta_text}"
+    df = load_data()
+    df_all = df.copy()  # Pour garder toutes les données
+    df_all['entry_date'] = pd.to_datetime(df_all['entry_date'], errors='coerce')
+
+    if df.empty:
+        st.warning("Aucune donnée à afficher.")
+        st.stop()
+
+    # Conversion des colonnes
+    df['date'] = pd.to_datetime(df['entry_date'])
+    if 'triggers' in df.columns and df['triggers'].apply(lambda x: isinstance(x, str)).any():
+        df['triggers'] = df['triggers'].apply(eval)
+
+    # Filtrage temporel
+    st.subheader("Filtrer les données")
+    periode = st.selectbox("Période", [
+        "Toutes les données", "Cette année", "Ce mois", "Cette semaine", "Personnalisé"
+    ])
+
+    today = datetime.today()
+
+    if periode == "Cette année":
+        df = df[df['date'].dt.year == today.year]
+    elif periode == "Ce mois":
+        df = df[(df['date'].dt.year == today.year) & (df['date'].dt.month == today.month)]
+    elif periode == "Cette semaine":
+        df = df[(df['date'].dt.year == today.year) & (df['date'].dt.isocalendar().week == today.isocalendar().week)]
+    elif periode == "Personnalisé":
+        selected_year = st.selectbox("Année", list(range(2000, today.year + 1))[::-1], index=0)
+        month_filter = st.checkbox("Filtrer par mois")
+        week_filter = st.checkbox("Filtrer par semaine")
+        
+        df = df[df['date'].dt.year == selected_year]
+        
+        if month_filter:
+            mois_francais_liste = [
+                "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+            ]
+            selected_month = st.selectbox("Mois", list(range(1, 13)), format_func=lambda m: mois_francais_liste[m - 1])
+
+            df = df[df['date'].dt.month == selected_month]
+
+        if week_filter:
+            selected_week = st.selectbox("Semaine du mois (1 à 4)", list(range(1, 5)))
+            df['week_of_month'] = df['date'].apply(lambda d: (d.day - 1) // 7 + 1)
+            df = df[df['week_of_month'] == selected_week]
+
+    # Graphique 1 : Nombre de déclenchements par intensité
+    st.subheader("Nombre de déclenchements et intensité des réactions")
+
+    df_exploded = df.explode('triggers')
+    df_counts = df_exploded.groupby(['triggers', 'severity']).size().reset_index(name='count')
+
+    fig1 = px.bar(df_counts, x='triggers', y='count', color='severity', barmode='stack',
+                labels={'count': 'Nombre d’occurrences', 'severity': 'Intensité'})
+    fig1.update_layout(xaxis_title=None)
+
+    st.plotly_chart(fig1, use_container_width=True)
+
+
+    # Graphique 2 : Évolution de l'intensité moyenne des réactions dans le temps
+    st.subheader("Évolution de l'intensité des réactions")
+    df_exploded['date'] = pd.to_datetime(df_exploded['date'], errors='coerce')
+    df_exploded = df_exploded.dropna(subset=['date', 'severity'])
+    df_exploded = df_exploded.dropna(subset=['severity'])
+
+    # Regrouper par jour : intensité moyenne par date
+    df_avg_severity = df_exploded.groupby('date')['severity'].mean().reset_index()
+
+    if len(df_avg_severity) == 1:
+        fig2 = go.Figure(data=go.Scatter(
+            x=df_avg_severity['date'], 
+            y=df_avg_severity['severity'], 
+            mode='markers',  # Affiche uniquement les points
+            marker=dict(color='blue', size=12)
+        ))
+    else:
+        fig2 = px.line(df_avg_severity, x='date', y='severity', labels={'date': 'Date', 'severity': 'Intensité moyenne', 'reactions': 'Réaction'})
+    st.plotly_chart(fig2, use_container_width=True)
+
+    # Graphique 3 : Diagramme des réactions
+    st.subheader("Répartition des types de réaction")
+    df_exploded = df.explode('reactions')
+    df_pie = df_exploded.groupby('reactions').agg(
+        count=('reactions', 'count'),
+        triggers_list=('triggers', lambda x: ', '.join(set(map(str, sum(x, [])))))
+    ).reset_index()
+
+    fig3 = px.pie(
+        df_pie,
+        names='reactions',
+        values='count',
+        labels={'reactions':'Réaction'},
+        hover_data=['triggers_list']
+    )
+
+    fig3.update_traces(
+        textinfo='percent',
+        hovertemplate="<b>Occurrences: %{value}<br>Déclencheurs: %{customdata[0]}"
+    )
+
+    st.plotly_chart(fig3, use_container_width=True)
+    
+    # Graphique 4 : Jauge de réactivité mensuelle
+    if not df.empty:
+        # Déterminer la période sélectionnée par l'utilisateur
+        if periode == "Personnalisé" and month_filter:
+            selected_month_period = pd.Period(f"{selected_year}-{selected_month:02d}")
+            previous_month_period = selected_month_period - 1
+        else:
+            # Par défaut : dernier mois présent dans les données filtrées
+            selected_month_period = df_all['entry_date'].dt.to_period('M').max()
+            previous_month_period = selected_month_period - 1
+
+        # Filtrage des données pour les mois courant et précédent
+        df_current = df_all[df_all['entry_date'].dt.to_period('M') == selected_month_period]
+        df_previous = df_all[df_all['entry_date'].dt.to_period('M') == previous_month_period]
+
+        def compute_proportion(df_month):
+            if len(df_month) == 0:
+                return 0
+            return (df_month['severity'] >= 4).sum() / len(df_month)
+
+        current_prop = compute_proportion(df_current)
+        previous_prop = compute_proportion(df_previous)
+
+        # Affichage dynamique du mois sélectionné
+        mois_francais = {
+            'January': 'Janvier', 'February': 'Février', 'March': 'Mars',
+            'April': 'Avril', 'May': 'Mai', 'June': 'Juin',
+            'July': 'Juillet', 'August': 'Août', 'September': 'Septembre',
+            'October': 'Octobre', 'November': 'Novembre', 'December': 'Décembre'
+        }
+
+        mois_en = selected_month_period.to_timestamp().strftime('%B')
+        annee = selected_month_period.to_timestamp().year
+        mois_fr = f"{mois_francais[mois_en]} {annee}"
+
+        st.subheader(f"Proportion d'entrées à haute intensité (≥ 4) pour {mois_fr} (comparé au mois précédent)")
 
         fig4 = go.Figure(go.Indicator(
             mode="gauge+number+delta",
-            value=current_ratio,
-            number={'suffix': " %"},
+            value=current_prop,
+            number={'valueformat': '.1%', 'suffix': ''},
             delta={
-                'reference': previous_ratio,
-                'relative': False,
+                'reference': previous_prop,
+                'valueformat': '.0%',
                 'increasing': {'color': "red"},
                 'decreasing': {'color': "green"}
             },
             gauge={
-                'axis': {'range': [0, 100]},
+                'axis': {'range': [0, 1], 'tickformat': '.0%'},
                 'bar': {'color': "black"},
                 'steps': [
-                    {'range': [0, 33], 'color': 'green'},
-                    {'range': [33, 66], 'color': 'orange'},
-                    {'range': [66, 100], 'color': 'red'},
+                    {'range': [0, 1/3], 'color': "green"},
+                    {'range': [1/3, 2/3], 'color': "orange"},
+                    {'range': [2/3, 1], 'color': "red"}
                 ],
             }
         ))
-        fig4.update_layout(title=titre_jauge)
-        st.plotly_chart(fig4)
-    else:
-        st.info(f"Pas de données pour le mois sélectionné ({mois_nom}).")
 
-    conn.close()
+        st.plotly_chart(fig4, use_container_width=True)

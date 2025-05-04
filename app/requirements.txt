@@ -8,3 +8,8 @@ httpx
 streamlit>=1.25.0
 streamlit_calendar
 plotly
+passlib
+python-multipart
+python-dotenv
+python-jose[cryptography]
+pyinstaller

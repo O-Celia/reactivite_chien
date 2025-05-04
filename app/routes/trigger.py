@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from crud import trigger as crud_trigger
-from schemas.trigger import TriggerCreate, TriggerRead, TriggerUpdate
+from schemas.trigger import TriggerCreate, TriggerRead, TriggerUpdate, CloneRequest
 from typing import List
 
 trigger_router = APIRouter()
@@ -18,9 +18,21 @@ def get_db():
 def create_trigger(trigger: TriggerCreate, db: Session = Depends(get_db)):
     return crud_trigger.create_trigger(db=db, trigger=trigger)
 
+# @trigger_router.get("/", response_model=List[TriggerRead])
+# def read_triggers(user_id: int, db: Session = Depends(get_db)):
+#     return crud_trigger.get_trigger(db, user_id)
+
 @trigger_router.get("/", response_model=List[TriggerRead])
-def read_triggers(db: Session = Depends(get_db)):
-    return crud_trigger.get_trigger(db)
+def get_user_triggers(user_id: int, db: Session = Depends(get_db)):
+    return crud_trigger.get_user_triggers(db, user_id)
+
+@trigger_router.get("/default", response_model=List[TriggerRead])
+def get_default_triggers(db: Session = Depends(get_db)):
+    return crud_trigger.get_default_triggers(db)
+
+@trigger_router.post("/clone_selected")
+def clone_selected_triggers(data: CloneRequest, db: Session = Depends(get_db)):
+    return crud_trigger.clone_selected_triggers(data, db)
 
 @trigger_router.get("/{trigger_id}", response_model=TriggerRead)
 def get_trigger_by_id(trigger_id: int, db: Session = Depends(get_db)):

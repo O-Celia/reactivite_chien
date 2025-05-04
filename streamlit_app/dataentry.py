@@ -17,30 +17,38 @@ def app():
         "new_trigger": "",
         "existing_reaction": "",
         "new_reaction": "",
-        "reset_triggered": False,  # Flag pour réinitialiser
+        "reset_triggered": False,
     }
 
-    # Initialisation des clés en session_state, sauf si déjà instanciées par un widget
+    # Initialisation des clés en session_state
     for key, default in defaults.items():
         st.session_state.setdefault(key, default)
 
-    # Si le flag de réinitialisation est activé, réinitialiser session_state
+    # Réinitialisation de session_state
     if st.session_state.get("reset_triggered"):
         for key, default in defaults.items():
-            if key != "reset_triggered":  # Ne pas réinitialiser le flag
+            if key != "reset_triggered":
                 st.session_state[key] = default
-        st.session_state["reset_triggered"] = False  # Réinitialiser le flag
+        st.session_state["reset_triggered"] = False
+        
+    # Token de connexion
+    token = st.session_state.get("token")
+    if not token:
+        st.error("Vous devez être connecté pour enregistrer une observation.")
+        return
 
     # Interface utilisateur
-    st.text_input("Nom d'utilisateur", key="username")
     st.date_input("Date de l'observation", key="entry_date")
     st.slider("Niveau de gravité (1 = léger, 5 = intense)", 1, 5, key="severity")
     st.text_area("Commentaire", key="comment")
 
     # Récupération des options
     try:
-        triggers = requests.get(f"{API_URL}/triggers/").json()
-        reactions = requests.get(f"{API_URL}/reactions/").json()
+        headers = {"Authorization": f"Bearer {token}"}
+        user_resp = requests.get(f"{API_URL}/users/me", headers=headers)
+        user_id = user_resp.json().get("id")
+        triggers = requests.get(f"{API_URL}/triggers/", params={"user_id": user_id}, headers=headers).json()
+        reactions = requests.get(f"{API_URL}/reactions/", params={"user_id": user_id}, headers=headers).json()
     except:
         triggers = []
         reactions = []
@@ -54,25 +62,43 @@ def app():
     st.selectbox("Réaction existante :", reaction_names, key="existing_reaction")
     st.text_input("...ou ajouter une nouvelle réaction", key="new_reaction")
 
-    # Boutons en bas : deux colonnes
+    # Boutons
     col1, col2 = st.columns([1, 1])
 
     with col1:
         if st.button("Soumettre l'observation"):
             try:
-                user_resp = requests.get(f"{API_URL}/users/{st.session_state.username}")
+                user_resp = requests.get(f"{API_URL}/users/me", headers=headers)
                 user_id = user_resp.json().get("id")
             except:
                 st.error("Utilisateur non trouvé.")
                 return
 
+            # Ajout du nouveau déclencheur/nouvelle réaction si existant
             trigger = st.session_state.new_trigger.strip() or st.session_state.existing_trigger
             reaction = st.session_state.new_reaction.strip() or st.session_state.existing_reaction
 
-            if not trigger or not reaction:
-                st.warning("Merci de renseigner au moins un déclencheur ET une réaction.")
-                return
+            # Si un nouveau déclencheur est saisi, l'ajouter dans la base de données
+            if trigger and trigger not in trigger_names:
+                trigger_payload = {"user_id": user_id, "name": trigger}
+                trigger_resp = requests.post(f"{API_URL}/triggers/", json=trigger_payload, headers=headers)
+                if trigger_resp.status_code in [200, 201]:
+                    trigger_names.append(trigger)  # Ajouter le déclencheur à la liste des déclencheurs
+                else:
+                    st.error(f"Erreur lors de l'ajout du déclencheur: {trigger_resp.text}")
+                    return
 
+            # Si une nouvelle réaction est saisie, l'ajouter dans la base de données
+            if reaction and reaction not in reaction_names:
+                reaction_payload = {"user_id": user_id, "name": reaction}
+                reaction_resp = requests.post(f"{API_URL}/reactions/", json=reaction_payload, headers=headers)
+                if reaction_resp.status_code in [200, 201]:
+                    reaction_names.append(reaction)  # Ajouter la réaction à la liste des réactions
+                else:
+                    st.error(f"Erreur lors de l'ajout de la réaction: {reaction_resp.text}")
+                    return
+
+            # Enregistrer l'observation avec les déclencheurs et réactions
             payload = {
                 "user_id": user_id,
                 "entry_date": str(st.session_state.entry_date),
@@ -82,7 +108,7 @@ def app():
                 "reactions": [reaction],
             }
 
-            resp = requests.post(f"{API_URL}/entry/", json=payload)
+            resp = requests.post(f"{API_URL}/entry/", json=payload, headers=headers)
             if resp.status_code in [200, 201]:
                 st.success("Observation enregistrée avec succès.")
             else:

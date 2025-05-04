@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from crud import reaction as crud_reaction
-from schemas.reaction import ReactionCreate, ReactionRead, ReactionUpdate
+from schemas.reaction import ReactionCreate, ReactionRead, ReactionUpdate, CloneRequest
 from typing import List
 
 reaction_router = APIRouter()
@@ -18,9 +18,17 @@ def get_db():
 def create_reaction(reaction: ReactionCreate, db: Session = Depends(get_db)):
     return crud_reaction.create_reaction(db=db, reaction=reaction)
 
-@reaction_router.get("/", response_model=List[ReactionRead])
-def read_reactions(db: Session = Depends(get_db)):
-    return crud_reaction.get_reaction(db)
+# @reaction_router.get("/", response_model=List[ReactionRead])
+# def read_reactions(user_id: int, db: Session = Depends(get_db)):
+#     return crud_reaction.get_reaction(db, user_id)
+
+@reaction_router.get("/default", response_model=List[ReactionRead])
+def get_default_reactions(db: Session = Depends(get_db)):
+    return crud_reaction.get_default_reactions(db)
+
+@reaction_router.post("/clone_selected")
+def clone_selected_reactions(data: CloneRequest, db: Session = Depends(get_db)):
+    return crud_reaction.clone_selected_reactions(data, db)
 
 @reaction_router.get("/{reaction_id}", response_model=ReactionRead)
 def get_reaction_by_id(reaction_id: int, db: Session = Depends(get_db)):
@@ -42,3 +50,7 @@ def delete_reaction(reaction_id: int, db: Session = Depends(get_db)):
     if db_reaction is None:
         raise HTTPException(status_code=404, detail="Réaction non trouvée")
     return db_reaction
+
+@reaction_router.get("/", response_model=List[ReactionRead])
+def get_user_reactions(user_id: int, db: Session = Depends(get_db)):
+    return crud_reaction.get_user_reactions(db, user_id)

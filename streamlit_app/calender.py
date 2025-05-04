@@ -4,11 +4,18 @@ from streamlit_calendar import calendar
 from datetime import datetime
 
 def app():
+        
+    token = st.session_state.get("token", None)
+    if not token:
+        st.warning("Vous devez être connecté pour voir cette page.")
+        st.stop()
+    headers = {"Authorization": f"Bearer {token}"}
+    
     st.title("Calendrier de réactivité")
 
-    # Appeler API pour récupérer les entrées
+    # Récupérer les entrées
     try:
-        response = requests.get("http://localhost:8000/entry/")
+        response = requests.get("http://localhost:8000/entry/", headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.exceptions.RequestException as e:
@@ -53,7 +60,7 @@ def app():
             "ID": entry["id"]
         })
 
-    #Configuration du calendrier
+    # Configuration du calendrier
     calendar_options = {
         "initialView": "dayGridMonth",
         "locale": "fr",
@@ -65,8 +72,7 @@ def app():
     st.markdown("---")
     
     # Sélecteur de mois uniquement pour filtrer l'expander
-    # Pour extraire les années présentes dans les données
-    available_years = sorted({e["date_obj"].year for e in filtered_data})
+    available_years = sorted({e["date_obj"].year for e in filtered_data}) if filtered_data else [datetime.today().year]
     months = list(range(1, 13))
     month_names = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
 

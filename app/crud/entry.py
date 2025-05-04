@@ -3,14 +3,9 @@ from fastapi import HTTPException
 from models.entry import DailyEntry, Trigger, Reaction, User
 from schemas.entry import DailyEntryCreate, DailyEntryRead, DailyEntryUpdate
 
-def create_daily_entry(db: Session, entry: DailyEntryCreate):
-    
-    user = db.query(User).filter(User.id == entry.user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
+def create_daily_entry(db: Session, entry: DailyEntryCreate, user_id: int):
     db_entry = DailyEntry(
-        user_id=entry.user_id,
+        user_id=user_id,
         entry_date=entry.entry_date,
         severity=entry.severity,
         comment=entry.comment,
@@ -18,58 +13,58 @@ def create_daily_entry(db: Session, entry: DailyEntryCreate):
     db.add(db_entry)
     db.commit()
     db.refresh(db_entry)
-    
-    # Pour les triggers
+
+    # Triggers
     if entry.triggers:
-        for trigger_name in entry.triggers:
-            trigger_name = trigger_name.lower()
-            trigger = db.query(Trigger).filter(Trigger.name == trigger_name).first()
+        for name in entry.triggers:
+            name = name.strip().lower()
+            trigger = db.query(Trigger).filter(Trigger.name == name).first()
             if not trigger:
-                trigger = Trigger(name=trigger_name)
+                trigger = Trigger(name=name)
                 db.add(trigger)
                 db.commit()
                 db.refresh(trigger)
             db_entry.triggers.append(trigger)
 
-    # Pour les reactions
+    # Reactions
     if entry.reactions:
-        for reaction_name in entry.reactions:
-            reaction_name = reaction_name.lower()
-            reaction = db.query(Reaction).filter(Reaction.name == reaction_name).first()
+        for name in entry.reactions:
+            name = name.strip().lower()
+            reaction = db.query(Reaction).filter(Reaction.name == name).first()
             if not reaction:
-                reaction = Reaction(name=reaction_name)
+                reaction = Reaction(name=name)
                 db.add(reaction)
                 db.commit()
                 db.refresh(reaction)
             db_entry.reactions.append(reaction)
-            
+
     db.commit()
     db.refresh(db_entry)
-    
+
     return DailyEntryRead(
         id=db_entry.id,
         user_id=db_entry.user_id,
         entry_date=db_entry.entry_date,
         severity=db_entry.severity,
         comment=db_entry.comment,
-        triggers=[trigger.name for trigger in db_entry.triggers],
-        reactions=[reaction.name for reaction in db_entry.reactions],
+        triggers=[t.name for t in db_entry.triggers],
+        reactions=[r.name for r in db_entry.reactions],
         created_at=db_entry.created_at
     )
 
-def get_daily_entries(db: Session):
-    entries = db.query(DailyEntry).all()
+def get_daily_entries(db: Session, user_id: int):
+    entries = db.query(DailyEntry).filter(DailyEntry.user_id == user_id).all()
     return [
         DailyEntryRead(
-            id=entry.id,
-            user_id=entry.user_id,
-            entry_date=entry.entry_date,
-            severity=entry.severity,
-            comment=entry.comment,
-            triggers=[trigger.name for trigger in entry.triggers],
-            reactions=[reaction.name for reaction in entry.reactions],
-            created_at=entry.created_at
-        ) for entry in entries
+            id=e.id,
+            user_id=e.user_id,
+            entry_date=e.entry_date,
+            severity=e.severity,
+            comment=e.comment,
+            triggers=[t.name for t in e.triggers],
+            reactions=[r.name for r in e.reactions],
+            created_at=e.created_at
+        ) for e in entries
     ]
 
 def get_daily_entry_by_id(db: Session, entry_id: int):
@@ -81,15 +76,14 @@ def get_daily_entry_by_id(db: Session, entry_id: int):
             entry_date=entry.entry_date,
             severity=entry.severity,
             comment=entry.comment,
-            triggers=[trigger.name for trigger in entry.triggers],
-            reactions=[reaction.name for reaction in entry.reactions],
+            triggers=[t.name for t in entry.triggers],
+            reactions=[r.name for r in entry.reactions],
             created_at=entry.created_at
         )
     return None
 
 def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdate):
     db_entry = db.query(DailyEntry).filter(DailyEntry.id == entry_id).first()
-    
     if not db_entry:
         raise HTTPException(status_code=404, detail="Entry not found")
 
@@ -102,11 +96,11 @@ def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdat
 
     if entry_update.triggers is not None:
         db_entry.triggers.clear()
-        for trigger_name in entry_update.triggers:
-            trigger_name = trigger_name.strip().lower()
-            trigger = db.query(Trigger).filter(Trigger.name == trigger_name).first()
+        for name in entry_update.triggers:
+            name = name.strip().lower()
+            trigger = db.query(Trigger).filter(Trigger.name == name).first()
             if not trigger:
-                trigger = Trigger(name=trigger_name)
+                trigger = Trigger(name=name)
                 db.add(trigger)
                 db.commit()
                 db.refresh(trigger)
@@ -114,27 +108,27 @@ def update_daily_entry(db: Session, entry_id: int, entry_update: DailyEntryUpdat
 
     if entry_update.reactions is not None:
         db_entry.reactions.clear()
-        for reaction_name in entry_update.reactions:
-            reaction_name = reaction_name.strip().lower()
-            reaction = db.query(Reaction).filter(Reaction.name == reaction_name).first()
+        for name in entry_update.reactions:
+            name = name.strip().lower()
+            reaction = db.query(Reaction).filter(Reaction.name == name).first()
             if not reaction:
-                reaction = Reaction(name=reaction_name)
+                reaction = Reaction(name=name)
                 db.add(reaction)
                 db.commit()
                 db.refresh(reaction)
             db_entry.reactions.append(reaction)
 
-        db.commit()
-        db.refresh(db_entry)
-        
+    db.commit()
+    db.refresh(db_entry)
+
     return DailyEntryRead(
         id=db_entry.id,
         user_id=db_entry.user_id,
         entry_date=db_entry.entry_date,
         severity=db_entry.severity,
         comment=db_entry.comment,
-        triggers=[trigger.name for trigger in db_entry.triggers],
-        reactions=[reaction.name for reaction in db_entry.reactions],
+        triggers=[t.name for t in db_entry.triggers],
+        reactions=[r.name for r in db_entry.reactions],
         created_at=db_entry.created_at
     )
 

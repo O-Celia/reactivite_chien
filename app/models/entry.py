@@ -33,6 +33,6 @@ class DailyEntry(Base):
     comment = Column(Text, nullable=True)
     created_at = Column(DateTime, default=get_paris_time)
 
-    users = relationship("User")
+    user = relationship("User", back_populates="entries")
     triggers = relationship("Trigger", secondary=entry_trigger, backref="entries")
     reactions = relationship("Reaction", secondary=entry_reaction, backref="entries")
