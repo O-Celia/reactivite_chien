@@ -80,8 +80,6 @@ def main():
 
         if st.button("Valider mes choix"):
             trigger_ids_to_send = [trigger_options[name] for name in selected_triggers]
-            st.write("Triggers sélectionnés :", selected_triggers)
-            st.write("Trigger IDs envoyés :", trigger_ids_to_send)
             if trigger_ids_to_send:
                 requests.post(f"{API_URL}/triggers/clone_selected", json={
                     "user_id": user_id,
@@ -89,7 +87,6 @@ def main():
                 })
             
             reaction_ids_to_send = [reaction_options[name] for name in selected_reactions]
-            st.write("IDs des déclencheurs sélectionnés :", reaction_ids_to_send)
             if reaction_ids_to_send:
                 requests.post(f"{API_URL}/reactions/clone_selected", json={
                     "user_id": user_id,

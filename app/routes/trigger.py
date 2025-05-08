@@ -18,10 +18,6 @@ def get_db():
 def create_trigger(trigger: TriggerCreate, db: Session = Depends(get_db)):
     return crud_trigger.create_trigger(db=db, trigger=trigger)
 
-# @trigger_router.get("/", response_model=List[TriggerRead])
-# def read_triggers(user_id: int, db: Session = Depends(get_db)):
-#     return crud_trigger.get_trigger(db, user_id)
-
 @trigger_router.get("/", response_model=List[TriggerRead])
 def get_user_triggers(user_id: int, db: Session = Depends(get_db)):
     return crud_trigger.get_user_triggers(db, user_id)

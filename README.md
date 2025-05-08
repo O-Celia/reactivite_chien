@@ -13,19 +13,20 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Visualisation des données avec **Matplotlib / Plotly**
 - Dashboard Power BI intégré (lien dans l'application)
 - Authentification simplifiée (JWT)
-- Tests unitaires avec **Pytest**
-- CI/CD avec **GitHub Actions**
-- Dockerisation complète via **Docker Compose**
+- Tests unitaires avec **Pytest**, lancés via **GitHub**
+- Conteneurisation du backend et frontend avec **Docker**
 - OWASP pour l'application des bonnes pratiques de sécurisation
-- Bonus : Intégration Elasticsearch pour montrer mes compétences en recherche full-text
 
 ### V2 – Extension cloud native (non déployée mais préparée)
 - Infrastructure as Code avec **Terraform** dans `/infra`
 - Orchestration avec **K3s** (Kubernetes léger)
 - Secrets Management avec **Vault**
+- CI/CD avec **GitHub Actions**
+- Dockerisation complète via **Docker Compose**
 - Base de données Cloud (Oracle Autonomous Database)
-- Déploiement dans un environnement cloud (Oracle)
+- Déploiement dans un environnement cloud (Oracle) ou Cloud privé avec Raspberry Pi
 - Monitoring avec Prometheus et Grafana
+- Intégration ElasticSearch et Kibana
 
 ---
 
@@ -71,7 +72,7 @@ L'application propose un lien vers un tableau de bord Power BI interactif permet
 | **BI**            | Power BI                                                 |
 | **Tests**         | Pytest                                                   |
 | **DevOps**        | Docker, GitHub Actions                                   |
-| **Observabilité** | Elasticsearch (optionnel)                                |
+| **Observabilité** | Elasticsearch, Kibana (v2)                                |
 | **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (V2) |
 
 ---

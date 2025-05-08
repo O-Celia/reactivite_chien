@@ -18,10 +18,6 @@ def get_db():
 def create_reaction(reaction: ReactionCreate, db: Session = Depends(get_db)):
     return crud_reaction.create_reaction(db=db, reaction=reaction)
 
-# @reaction_router.get("/", response_model=List[ReactionRead])
-# def read_reactions(user_id: int, db: Session = Depends(get_db)):
-#     return crud_reaction.get_reaction(db, user_id)
-
 @reaction_router.get("/default", response_model=List[ReactionRead])
 def get_default_reactions(db: Session = Depends(get_db)):
     return crud_reaction.get_default_reactions(db)
