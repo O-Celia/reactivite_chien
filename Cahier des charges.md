@@ -38,13 +38,20 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Authentification via JSON Web Tokens (JWT).
 - Gestion des sessions côté API FastAPI.
 
+![connexion](https://github.com/user-attachments/assets/929fa822-4274-447e-8dcb-f3882a2ad0fd)
+
 **Gestion des déclencheurs et réactions :**
 - Déclencheurs et réactions par défaut proposés à la première connexion pour simplifier le démarrage.
 - Listes personnalisables pour chaque utilisateur (ajout, modification, suppression).
 
+![admin](https://github.com/user-attachments/assets/2aea54cc-e594-4d67-befc-1fac7641a180)
+
 **Saisie quotidienne :**
 - Sélection des déclencheurs du jour.
 - Sélection des réactions aux déclencheurs et leur intensité (1 à 5).
+- Modification des observations
+
+![nvl obs](https://github.com/user-attachments/assets/d4a7578d-8a1c-4144-be8d-93bcb52c22a5)
 
 **Visualisation des données :**
 - Calendrier interactif avec affichage visuel des données.
@@ -54,12 +61,18 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
     - Répartition et intensité des réactions.
     - Évolution temporelle.
     - Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles.
+ 
+![calendrier](https://github.com/user-attachments/assets/35260215-b299-457d-981d-24d842e149ee)
 
 **Recherche intelligente :**
 - Interface simple type barre de recherche + filtres.
 
+![search](https://github.com/user-attachments/assets/241a5002-23e3-4ccf-8d60-f3d9a427ad7c)
+
 **Gestion du compte :**
 - Possibilité de modifier (nom d'utilisateur, mot de passe) ou supprimer le compte.
+
+![compte](https://github.com/user-attachments/assets/de6145c7-e7bd-453c-835f-cc6a63844f1d)
 
 ### 2.2. Contraintes fonctionnelles
 
