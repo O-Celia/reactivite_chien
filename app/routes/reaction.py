@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from crud import reaction as crud_reaction
+from models.user import User
 from schemas.reaction import ReactionCreate, ReactionRead, ReactionUpdate, CloneRequest
 from typing import List
+from utils.dependencies import get_current_user
 
 reaction_router = APIRouter()
 
@@ -47,6 +49,10 @@ def delete_reaction(reaction_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Réaction non trouvée")
     return db_reaction
 
+# @reaction_router.get("/", response_model=List[ReactionRead])
+# def get_user_reactions(user_id: int, db: Session = Depends(get_db)):
+#     return crud_reaction.get_user_reactions(db, user_id)
+
 @reaction_router.get("/", response_model=List[ReactionRead])
-def get_user_reactions(user_id: int, db: Session = Depends(get_db)):
-    return crud_reaction.get_user_reactions(db, user_id)
+def get_user_reactions(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return crud_reaction.get_user_reactions(db, current_user)

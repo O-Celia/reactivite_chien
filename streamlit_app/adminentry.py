@@ -32,9 +32,11 @@ def app():
     else:
         entry_id = st.session_state.entry_id
 
+        # Auth headers
+        headers = {"Authorization": f"Bearer {token}"}
+
         # Récupération de l'entrée
         try:
-            headers = {"Authorization": f"Bearer {token}"}
             entry_resp = requests.get(f"{API_URL}/entry/{entry_id}", headers=headers)
             entry_resp.raise_for_status()
             entry = entry_resp.json()
@@ -49,15 +51,13 @@ def app():
             return
 
         # Récupération listes déclencheurs/réactions
-        triggers_list = []
-        reactions_list = []
         try:
-            user_resp = requests.get(f"{API_URL}/users/me", headers=headers)
-            user_id = user_resp.json().get("id")
-            triggers_list = [t['name'] for t in requests.get(f"{API_URL}/triggers/", params={"user_id": user_id}, headers=headers).json()]
-            reactions_list = [r['name'] for r in requests.get(f"{API_URL}/reactions/", params={"user_id": user_id}, headers=headers).json()]
-        except:
-            st.warning("Erreur lors de la récupération des déclencheurs ou réactions.")
+            triggers_list = [t['name'] for t in requests.get(f"{API_URL}/triggers/", headers=headers).json()]
+            reactions_list = [r['name'] for r in requests.get(f"{API_URL}/reactions/", headers=headers).json()]
+        except Exception as e:
+            st.warning(f"Erreur lors de la récupération des déclencheurs ou réactions : {e}")
+            triggers_list = []
+            reactions_list = []
 
         # Champs modifiables
         st.subheader("✏️ Modifier l'entrée")
@@ -66,8 +66,16 @@ def app():
         severity = st.slider("Gravité", 1, 5, entry["severity"])
         comment = st.text_area("Commentaire", value=entry.get("comment", ""))
 
-        selected_trigger = st.selectbox("Déclencheur", triggers_list, index=triggers_list.index(entry["triggers"][0]) if entry["triggers"] else 0)
-        selected_reaction = st.selectbox("Réaction", reactions_list, index=reactions_list.index(entry["reactions"][0]) if entry["reactions"] else 0)
+        selected_trigger = st.selectbox(
+            "Déclencheur", 
+            triggers_list, 
+            index=triggers_list.index(entry["triggers"][0]) if entry["triggers"] else 0
+        )
+        selected_reaction = st.selectbox(
+            "Réaction", 
+            reactions_list, 
+            index=reactions_list.index(entry["reactions"][0]) if entry["reactions"] else 0
+        )
 
         col1, col2, col3 = st.columns(3)
 
@@ -82,25 +90,24 @@ def app():
                 }
                 try:
                     update_resp = requests.put(f"{API_URL}/entry/{entry_id}", headers=headers, json=payload)
-                    if update_resp.status_code == 200:
-                        st.success("✅ Entrée modifiée avec succès.")
-                        st.session_state.entry_id = ""
-                        st.rerun()
-                    else:
-                        st.error(f"Erreur {update_resp.status_code} : {update_resp.text}")
+                    update_resp.raise_for_status()
+                    st.success("✅ Entrée modifiée avec succès.")
+                    st.session_state.entry_id = ""
+                    st.rerun()
                 except Exception as e:
                     st.error(f"Erreur : {e}")
 
         with col2:
             if st.button("🗑️ Supprimer l'entrée"):
-                delete_resp = requests.delete(f"{API_URL}/entry/{entry_id}", headers=headers)
-                if delete_resp.status_code == 200:
+                try:
+                    delete_resp = requests.delete(f"{API_URL}/entry/{entry_id}", headers=headers)
+                    delete_resp.raise_for_status()
                     st.success("✅ Entrée supprimée.")
                     st.session_state.entry_id = ""
                     st.rerun()
-                else:
-                    st.error(f"Erreur : {delete_resp.status_code} - {delete_resp.text}")
-                    
+                except Exception as e:
+                    st.error(f"Erreur : {e}")
+
         with col3:
             if st.button("🔙 Retour"):
                 st.session_state.entry_id = ""

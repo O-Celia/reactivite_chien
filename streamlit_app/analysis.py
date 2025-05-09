@@ -30,14 +30,20 @@ def app():
 
     df = load_data()
     df_all = df.copy()  # Pour garder toutes les données
-    df_all['entry_date'] = pd.to_datetime(df_all['entry_date'], errors='coerce')
+
+    if 'entry_date' in df_all.columns:
+        df_all['entry_date'] = pd.to_datetime(df_all['entry_date'], errors='coerce')
 
     if df.empty:
         st.warning("Aucune donnée à afficher.")
         st.stop()
 
     # Conversion des colonnes
-    df['date'] = pd.to_datetime(df['entry_date'])
+    if 'entry_date' in df.columns:
+        df['date'] = pd.to_datetime(df['entry_date'], errors='coerce')
+    else:
+        df['date'] = pd.NaT
+
     if 'triggers' in df.columns and df['triggers'].apply(lambda x: isinstance(x, str)).any():
         df['triggers'] = df['triggers'].apply(eval)
 

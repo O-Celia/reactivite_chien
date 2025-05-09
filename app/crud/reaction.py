@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from models.reaction import Reaction
+from models.user import User
 from schemas.reaction import ReactionCreate, ReactionUpdate, CloneRequest
 
 def create_reaction(db: Session, reaction: ReactionCreate):
@@ -41,5 +42,8 @@ def clone_selected_reactions(data: CloneRequest, db: Session):
     db.commit()
     return {"detail": "Réactions copiées"}
 
-def get_user_reactions(db: Session, user_id: int):
-    return db.query(Reaction).filter(Reaction.user_id == user_id).all()
+# def get_user_reactions(db: Session, user_id: int):
+#     return db.query(Reaction).filter(Reaction.user_id == user_id).all()
+
+def get_user_reactions(db: Session, user: User):
+    return db.query(Reaction).filter(Reaction.user_id == user.id).all()

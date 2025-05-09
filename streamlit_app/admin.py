@@ -8,63 +8,91 @@ def app():
 
     token = st.session_state.get("token")
     if not token:
-        st.error("Vous devez être connecté pour gérer le traitement des déclencheurs et réactions.")
+        st.error("Vous devez être connecté pour gérer les déclencheurs et réactions.")
         return
 
-    # Déclencheurs
-    st.subheader("Déclencheurs")
-    
-    # Afficher les déclencheurs existants
     headers = {"Authorization": f"Bearer {token}"}
-    user_resp = requests.get(f"{API_URL}/users/me", headers=headers)
-    user_id = user_resp.json().get("id")
-    triggers = requests.get(f"{API_URL}/triggers/", params={"user_id": user_id}, headers=headers).json()
+
+    # -------------------
+    # DÉCLENCHEURS
+    # -------------------
+    st.subheader("Déclencheurs")
+
+    try:
+        triggers = requests.get(f"{API_URL}/triggers/", headers=headers).json()
+    except Exception as e:
+        st.error(f"Erreur lors de la récupération des déclencheurs : {e}")
+        triggers = []
+
     for trigger in triggers:
         col1, col2 = st.columns([3, 1])
         with col1:
             new_name = st.text_input(f"Modifier '{trigger['name']}'", value=trigger['name'], key=f"trigger_{trigger['id']}")
         with col2:
             if st.button("🗑️ Supprimer", key=f"delete_trigger_{trigger['id']}"):
-                requests.delete(f"{API_URL}/triggers/{trigger['id']}", headers=headers)
-                st.rerun()
+                try:
+                    requests.delete(f"{API_URL}/triggers/{trigger['id']}", headers=headers)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Erreur lors de la suppression : {e}")
         if new_name != trigger['name']:
-            requests.put(f"{API_URL}/triggers/{trigger['id']}", headers=headers, json={"name": new_name})
-            st.rerun()
+            try:
+                requests.put(f"{API_URL}/triggers/{trigger['id']}", headers=headers, json={"name": new_name})
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erreur lors de la mise à jour : {e}")
 
-    # Ajouter un nouveau déclencheur
+    # Ajouter un déclencheur
     st.subheader("Ajouter un nouveau déclencheur")
     new_trigger_name = st.text_input("Nom du nouveau déclencheur", key="new_trigger_name")
     if st.button("Ajouter le déclencheur"):
         if new_trigger_name:
-            requests.post(f"{API_URL}/triggers/", headers=headers, json={"name": new_trigger_name, "user_id": user_id})
-            st.rerun()
+            try:
+                requests.post(f"{API_URL}/triggers/", headers=headers, json={"name": new_trigger_name})
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erreur lors de l'ajout : {e}")
         else:
             st.warning("Veuillez entrer un nom pour le déclencheur.")
 
-    # Réactions
+    # -------------------
+    # RÉACTIONS
+    # -------------------
     st.subheader("Réactions")
-    
-    # Afficher les réactions existantes
-    reactions = requests.get(f"{API_URL}/reactions/", params={"user_id": user_id}, headers=headers).json()
+
+    try:
+        reactions = requests.get(f"{API_URL}/reactions/", headers=headers).json()
+    except Exception as e:
+        st.error(f"Erreur lors de la récupération des réactions : {e}")
+        reactions = []
+
     for reaction in reactions:
         col1, col2 = st.columns([3, 1])
         with col1:
             new_name = st.text_input(f"Modifier '{reaction['name']}'", value=reaction['name'], key=f"reaction_{reaction['id']}")
         with col2:
             if st.button("🗑️ Supprimer", key=f"delete_reaction_{reaction['id']}"):
-                requests.delete(f"{API_URL}/reactions/{reaction['id']}", headers=headers)
-                st.rerun()
+                try:
+                    requests.delete(f"{API_URL}/reactions/{reaction['id']}", headers=headers)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Erreur lors de la suppression : {e}")
         if new_name != reaction['name']:
-            requests.put(f"{API_URL}/reactions/{reaction['id']}", headers=headers, json={"name": new_name})
-            st.rerun()
+            try:
+                requests.put(f"{API_URL}/reactions/{reaction['id']}", headers=headers, json={"name": new_name})
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erreur lors de la mise à jour : {e}")
 
-    # Ajouter une nouvelle réaction
+    # Ajouter une réaction
     st.subheader("Ajouter une nouvelle réaction")
     new_reaction_name = st.text_input("Nom de la nouvelle réaction", key="new_reaction_name")
     if st.button("Ajouter la réaction"):
         if new_reaction_name:
-            requests.post(f"{API_URL}/reactions/", headers=headers, json={"name": new_reaction_name, "user_id": user_id})
-            st.rerun()
+            try:
+                requests.post(f"{API_URL}/reactions/", headers=headers, json={"name": new_reaction_name})
+                st.rerun()
+            except Exception as e:
+                st.error(f"Erreur lors de l'ajout : {e}")
         else:
             st.warning("Veuillez entrer un nom pour la réaction.")
-

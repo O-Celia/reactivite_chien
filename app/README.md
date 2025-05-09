@@ -184,7 +184,7 @@ L’API est structurée autour de plusieurs entités principales : Utilisateur
 ### Authentification & Utilisateur
 
 - POST /users/ — Créer un utilisateur.
-- POST /users/login — Authentification (renvoie un token).
+- POST /users/login — Authentification avec identifiants (renvoie un token JWT).
 - GET /users/me — Récupère le profil de l'utilisateur connecté.
 - PUT /users/me — Met à jour le profil de l'utilisateur connecté.
 - DELETE /users/me — Supprime le compte de l'utilisateur connecté.

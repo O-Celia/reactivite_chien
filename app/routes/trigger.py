@@ -4,6 +4,8 @@ from database import SessionLocal
 from crud import trigger as crud_trigger
 from schemas.trigger import TriggerCreate, TriggerRead, TriggerUpdate, CloneRequest
 from typing import List
+from utils.dependencies import get_current_user
+from models.user import User
 
 trigger_router = APIRouter()
 
@@ -18,9 +20,13 @@ def get_db():
 def create_trigger(trigger: TriggerCreate, db: Session = Depends(get_db)):
     return crud_trigger.create_trigger(db=db, trigger=trigger)
 
+# @trigger_router.get("/", response_model=List[TriggerRead])
+# def get_user_triggers(user_id: int, db: Session = Depends(get_db)):
+#     return crud_trigger.get_user_triggers(db, user_id)
+
 @trigger_router.get("/", response_model=List[TriggerRead])
-def get_user_triggers(user_id: int, db: Session = Depends(get_db)):
-    return crud_trigger.get_user_triggers(db, user_id)
+def get_user_triggers(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return crud_trigger.get_user_triggers(db, current_user)
 
 @trigger_router.get("/default", response_model=List[TriggerRead])
 def get_default_triggers(db: Session = Depends(get_db)):

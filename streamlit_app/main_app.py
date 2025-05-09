@@ -64,36 +64,34 @@ def main():
         st.rerun()
 
     user_info = user_info_resp.json()
-    user_id = user_info["id"]
 
-    if user_info["first_login"]:
+    if user_info.get("first_login", False):
         st.subheader("Bienvenue ! Sélectionne tes déclencheurs et réactions")
 
-        default_triggers = requests.get(f"{API_URL}/triggers/default").json()
-        default_reactions = requests.get(f"{API_URL}/reactions/default").json()
+        try:
+            default_triggers = requests.get(f"{API_URL}/triggers/default", headers=headers).json()
+            default_reactions = requests.get(f"{API_URL}/reactions/default", headers=headers).json()
+        except:
+            st.error("Erreur lors du chargement des déclencheurs ou réactions par défaut.")
+            return
 
-        trigger_options = {f"{t['name']}": t["id"] for t in default_triggers}
-        reaction_options = {f"{r['name']}": r["id"] for r in default_reactions}
+        trigger_options = {t["name"]: t["id"] for t in default_triggers}
+        reaction_options = {r["name"]: r["id"] for r in default_reactions}
 
         selected_triggers = st.multiselect("Déclencheurs disponibles", trigger_options.keys())
         selected_reactions = st.multiselect("Réactions disponibles", reaction_options.keys())
 
         if st.button("Valider mes choix"):
-            trigger_ids_to_send = [trigger_options[name] for name in selected_triggers]
-            if trigger_ids_to_send:
-                requests.post(f"{API_URL}/triggers/clone_selected", json={
-                    "user_id": user_id,
-                    "trigger_ids": trigger_ids_to_send
+            if selected_triggers:
+                requests.post(f"{API_URL}/triggers/clone_selected", headers=headers, json={
+                    "trigger_ids": [trigger_options[name] for name in selected_triggers]
                 })
-            
-            reaction_ids_to_send = [reaction_options[name] for name in selected_reactions]
-            if reaction_ids_to_send:
-                requests.post(f"{API_URL}/reactions/clone_selected", json={
-                    "user_id": user_id,
-                    "reaction_ids": reaction_ids_to_send
+            if selected_reactions:
+                requests.post(f"{API_URL}/reactions/clone_selected", headers=headers, json={
+                    "reaction_ids": [reaction_options[name] for name in selected_reactions]
                 })
 
-            requests.patch(f"{API_URL}/users/{user_id}", json={"first_login": False})
+            requests.patch(f"{API_URL}/users/me", headers=headers, json={"first_login": False})
             st.success("C’est enregistré ! Tu peux maintenant utiliser ton espace.")
             st.rerun()
     else:
