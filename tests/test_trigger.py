@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from fastapi.testclient import TestClient
 from main import app
 
@@ -8,114 +9,170 @@ GREEN = "\033[92m"
 RED = "\033[91m"
 RESET = "\033[0m"
 
-# --------- FIXTURES ------------
+@pytest.fixture(scope="module")
+def basic_client():
+    return TestClient(app)
+
+
+@pytest.fixture(scope="module")
+def user_data():
+    uid = uuid.uuid4().hex[:6]
+    return {
+        "username": f"testuser_{uid}",
+        "password": "testpassword",
+        "email": f"test_{uid}@example.com"
+    }
+
+
+@pytest.fixture(scope="module")
+def auth_client(user_data):
+    # Création de l'utilisateur
+    response = client.post("/users/", json=user_data)
+    if response.status_code not in (200, 201):
+        raise Exception(f"User creation failed: {response.status_code} - {response.json()}")
+    created_user = response.json()
+    user_id = created_user.get("id")
+    if not user_id:
+        raise Exception("Pas d'id utilisateur retourné à la création")
+    # Connexion pour obtenir le token
+    login_response = client.post("/users/login", json=user_data)
+    if login_response.status_code != 200:
+        raise Exception("Échec de la récupération du token. Vérifie les identifiants.")
+    token = login_response.json().get("access_token")
+    if not token:
+        raise Exception("Pas de token reçu.")
+    # Mise à jour des headers
+    client.headers.update({"Authorization": f"Bearer {token}"})
+    yield client, user_id
+    # Teardown : suppression de l'utilisateur
+    client.delete("/users/me", headers={"Authorization": f"Bearer {token}"})
+
+
 @pytest.fixture
-def created_trigger():
-    """Crée un trigger avant un test et le supprime après."""
-    response = client.post("/triggers/", json={
-        "name": "Test Trigger"
-    })
+def created_trigger(auth_client):
+    client, user_id = auth_client
+    data = {"name": "soleil", "user_id": user_id}
+    response = client.post("/triggers/", json=data)
+    assert response.status_code in (200, 201), f"Erreur à la création du trigger : {response.status_code} - {response.text}"
     trigger = response.json()
     yield trigger
-    client.delete(f"/triggers/{trigger['id']}")
+    # Teardown : suppression du trigger créé
+    delete_response = client.delete(f"/triggers/{trigger['id']}")
+    if delete_response.status_code not in (200, 204):
+        print(f"{RED}⚠️ Échec de la suppression du trigger : {delete_response.status_code} - {delete_response.text}{RESET}")
+        
 
-# Test Passant : Créer un trigger avec des données valides
-def test_create_trigger_pass():
-    response = client.post("/triggers/", json={
-        "name": "Trigger Test"
-    })
+# --- Tests ---
+
+def test_create_trigger_pass(auth_client):
+    client, user_id = auth_client
+    response = client.post("/triggers/", json={"name": "Trigger Test", "user_id": user_id})
     try:
-        assert response.status_code in [200, 201]
+        assert response.status_code in (200, 201)
         print(f"{GREEN}Test passant : création de trigger OK{RESET}")
     except AssertionError:
-        print(f"{RED}ERREUR: création de trigger a échoué{RESET}")
+        print(f"{RED}ERREUR : création de trigger a échoué{RESET}")
         raise
     finally:
-        if response.status_code in [200, 201]:
-            trigger_id = response.json().get("id")
+        if response.status_code in (200, 201):
+            trigger_id = response.json()["id"]
             client.delete(f"/triggers/{trigger_id}")
 
-# Test Non Passant : Créer un trigger avec un champ manquant
-def test_create_trigger_missing_field():
-    response = client.post("/triggers/", json={
-        # "name" manquant
-    })
+def test_create_trigger_fail_missing_name(auth_client):
+    client, user_id = auth_client
+    response = client.post("/triggers/", json={"user_id": user_id})
     try:
         assert response.status_code == 422
-        print(f"{GREEN}Test non passant (manque champ obligatoire) : OK{RESET}")
+        print(f"{GREEN}Test non passant : création de trigger sans nom refusé OK{RESET}")
     except AssertionError:
-        print(f"{RED}ERREUR: champ obligatoire manquant mais pas d'erreur retournée{RESET}")
+        print(f"{RED}ERREUR : création de trigger sans nom n’a pas renvoyé 422 mais {response.status_code}{RESET}")
         raise
 
-# Test Non Passant : Essayer de récupérer un trigger inexistant
-def test_get_nonexistent_trigger():
-    response = client.get("/triggers/99999")
+def test_get_user_triggers_pass(auth_client, created_trigger):
+    client, _ = auth_client
+    response = client.get("/triggers/")
     try:
-        assert response.status_code == 404
-        print(f"{GREEN}Test non passant (GET sur une ID inexistante) : OK{RESET}")
+        assert response.status_code == 200
+        triggers = response.json()
+        assert any(t["id"] == created_trigger["id"] for t in triggers)
+        print(f"{GREEN}Test passant : récupération de triggers OK{RESET}")
     except AssertionError:
-        print(f"{RED}ERREUR: attendu 404 sur ID inexistant, reçu {response.status_code}{RESET}")
+        print(f"{RED}ERREUR : récupération de triggers a échoué{RESET}")
         raise
 
-# Test Passant : Lire un trigger existant
-def test_get_trigger_pass(created_trigger):
-    trigger_id = created_trigger["id"]
+def test_get_user_triggers_fail_unauthenticated(basic_client):
+    response = basic_client.get("/triggers/")
+    try:
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Not authenticated"
+        print(f"{GREEN}Test non passant : récupération de triggers sans authentification refusé OK{RESET}")
+    except AssertionError:
+        print(f"{RED}ERREUR : récupération de triggers sans authentification n’a pas renvoyé 401 ou message attendu{RESET}")
+        raise
 
+def test_get_trigger_by_id_pass(auth_client, created_trigger):
+    client, _ = auth_client
+    trigger_id = created_trigger["id"]
     response = client.get(f"/triggers/{trigger_id}")
     try:
         assert response.status_code == 200
-        print(f"{GREEN}Test passant : lecture d'un trigger OK{RESET}")
+        assert response.json()["id"] == trigger_id
+        print(f"{GREEN}Test passant : récupération trigger par ID OK{RESET}")
     except AssertionError:
-        print(f"{RED}ERREUR: lecture de trigger a échoué{RESET}")
+        print(f"{RED}ERREUR : récupération trigger par ID a échoué{RESET}")
         raise
 
-# Test Passant : Supprimer un trigger existant
-def test_delete_trigger_pass():
-    response = client.post("/triggers/", json={
-        "name": "Trigger Test à supprimer"
-    })
-    trigger_id = response.json()["id"]
-
-    delete_response = client.delete(f"/triggers/{trigger_id}")
-    try:
-        assert delete_response.status_code == 200
-        print(f"{GREEN}Test passant : suppression d'un trigger OK{RESET}")
-    except AssertionError:
-        print(f"{RED}ERREUR: suppression de trigger a échoué{RESET}")
-        raise
-
-# Test Passant : Mettre à jour un trigger existant
-def test_update_trigger_pass(created_trigger):
-    trigger_id = created_trigger["id"]
-
-    updated_data = {
-        "name": "Trigger mis à jour"
-    }
-
-    response = client.put(f"/triggers/{trigger_id}", json=updated_data)
-    
-    try:
-        assert response.status_code == 200
-        updated_trigger = response.json()
-        assert updated_trigger["name"] == "Trigger mis à jour"
-        print(f"{GREEN}Test passant : mise à jour d'un trigger OK{RESET}")
-    except AssertionError:
-        print(f"{RED}ERREUR: mise à jour de trigger a échoué{RESET}")
-        raise
-
-# Test Non Passant : Essayer de mettre à jour un trigger inexistant
-def test_update_nonexistent_trigger():
-    fake_trigger_id = 99999  # ID supposé inexistant
-
-    updated_data = {
-        "name": "Trigger inexistant"
-    }
-
-    response = client.put(f"/triggers/{fake_trigger_id}", json=updated_data)
-
+def test_get_trigger_by_id_fail_not_found(auth_client):
+    client, _ = auth_client
+    response = client.get("/triggers/99999999")
     try:
         assert response.status_code == 404
-        print(f"{GREEN}Test non passant : mise à jour sur trigger inexistant renvoie 404 OK{RESET}")
+        print(f"{GREEN}Test non passant : récupération trigger avec ID inexistant échoué OK{RESET}")
     except AssertionError:
-        print(f"{RED}ERREUR: attendu 404 sur update de trigger inexistant, reçu {response.status_code}{RESET}")
+        print(f"{RED}ERREUR : récupération trigger avec ID inexistant n’a pas échoué (status {response.status_code}){RESET}")
         raise
+
+def test_update_trigger_pass(auth_client, created_trigger):
+    client, _ = auth_client
+    trigger_id = created_trigger["id"]
+    response = client.put(f"/triggers/{trigger_id}", json={"name": "Trigger modifié"})
+    try:
+        assert response.status_code == 200
+        assert response.json()["name"] == "Trigger modifié"
+        print(f"{GREEN}Test passant : mise à jour trigger OK{RESET}")
+    except AssertionError:
+        print(f"{RED}ERREUR : mise à jour trigger a échoué{RESET}")
+        raise
+
+def test_update_trigger_fail_not_found(auth_client):
+    client, _ = auth_client
+    response = client.put("/triggers/99999999", json={"name": "Trigger modifié"})
+    try:
+        assert response.status_code == 404
+        print(f"{GREEN}Test non passant : mise à jour trigger ID inexistant échoué OK{RESET}")
+    except AssertionError:
+        print(f"{RED}ERREUR : mise à jour trigger ID inexistant n’a pas échoué (status {response.status_code}){RESET}")
+        raise
+
+def test_delete_trigger_pass(auth_client):
+    client, user_id = auth_client
+    response = client.post("/triggers/", json={"name": "Trigger à supprimer", "user_id": user_id})
+    trigger_id = response.json()["id"]
+    response = client.delete(f"/triggers/{trigger_id}")
+    try:
+        assert response.status_code in (200, 204)
+        print(f"{GREEN}Test passant : suppression trigger OK{RESET}")
+    except AssertionError:
+        print(f"{RED}ERREUR : suppression trigger a échoué (status {response.status_code}){RESET}")
+        raise
+
+def test_delete_trigger_fail_not_found(auth_client):
+    client, _ = auth_client
+    response = client.delete("/triggers/99999999")
+    try:
+        assert response.status_code == 404
+        print(f"{GREEN}Test non passant : suppression trigger ID inexistant échoué OK{RESET}")
+    except AssertionError:
+        print(f"{RED}ERREUR : suppression trigger ID inexistant n’a pas échoué (status {response.status_code}){RESET}")
+        raise
+

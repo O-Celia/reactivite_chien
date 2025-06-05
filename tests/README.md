@@ -5,12 +5,14 @@ Ce répertoire contient les tests unitaires et d'intégration pour l'application
 - `/entry/` : Gestion des entrées (journaux)
 - `/reactions/` : Gestion des réactions
 - `/triggers/` : Gestion des déclencheurs
+- `/users/` : Gestion des utilisateurs
 
 ## Structure
 
 - `test_entry.py` : Vérifie les opérations CRUD sur les entrées.
 - `test_reaction.py` : Vérifie les opérations CRUD sur les réactions.
 - `test_trigger.py` : Vérifie les opérations CRUD sur les déclencheurs.
+- `test_user.py` : Vérifie les opérations CRUD sur les utilisateurs.
 
 Chaque fichier de test suit la structure suivante :
 - **Fixtures** : Création et suppression d’objets avant/après les tests.

@@ -24,9 +24,9 @@ def get_db():
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return crud_user.create_user(db=db, user=user)
 
-# @user_router.get("/", response_model=List[UserRead])
-# def read_users(db: Session = Depends(get_db)):
-#     return crud_user.get_users(db)
+@user_router.get("/", response_model=List[UserRead])
+def read_users(db: Session = Depends(get_db)):
+    return crud_user.get_users(db)
 
 @user_router.get("/me", response_model=UserRead)
 def read_own_profile(current_user: User = Depends(get_current_user)):
@@ -61,12 +61,12 @@ def update_own_profile(
 #         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
 #     return db_user
 
-# @user_router.delete("/id/{user_id}", response_model=UserRead)
-# def delete_user(user_id: int, db: Session = Depends(get_db)):
-#     db_user = crud_user.delete_user(db, user_id)
-#     if db_user is None:
-#         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
-#     return db_user
+@user_router.delete("/id/{user_id}", response_model=UserRead)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud_user.delete_user(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    return db_user
 
 @user_router.delete("/me", response_model=UserRead)
 def delete_own_account(
