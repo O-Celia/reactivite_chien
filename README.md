@@ -11,9 +11,8 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Frontend web simple avec **Streamlit**
 - Base de données **SQLite**
 - Visualisation des données avec **Matplotlib / Plotly**
-- Dashboard Power BI intégré (lien dans l'application)
 - Authentification simplifiée (JWT)
-- Tests unitaires avec **Pytest**, lancés via **GitHub**
+- Tests unitaires avec **Pytest**
 - Conteneurisation du backend et frontend avec **Docker**
 - OWASP pour l'application des bonnes pratiques de sécurisation
 
@@ -56,24 +55,16 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 docker-compose up --build
 ```
 
-## Dashboard Power BI
-
-L'application propose un lien vers un tableau de bord Power BI interactif permettant de suivre :
-- La fréquence des déclencheurs
-- L’évolution des réactions
-- Des statistiques comportementales dans le temps
-
 ## Technologies utilisées
 
 | **Type**          | **Stack**                                                |
 |-------------------|----------------------------------------------------------|
 | **Backend**       | FastAPI, Pydantic, Pandas, SQLite                        |
 | **Frontend**      | Streamlit, Matplotlib / Plotly                           |
-| **BI**            | Power BI                                                 |
 | **Tests**         | Pytest                                                   |
-| **DevOps**        | Docker, GitHub Actions                                   |
+| **DevOps**        | Docker, GitHub Actions (v2)                                   |
 | **Observabilité** | Elasticsearch, Kibana (v2)                                |
-| **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (V2) |
+| **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (v2) |
 
 ---
 
