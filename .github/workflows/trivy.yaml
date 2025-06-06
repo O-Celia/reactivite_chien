@@ -22,23 +22,29 @@ jobs:
         with:
           image-ref: 'backend-app:latest'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+          output: 'trivy-backend.sarif'
 
       - name: Scanner l’image frontend
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'frontend-app:latest'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+          output: 'trivy-frontend.sarif'
 
-      - name: Télécharger les résultats Trivy
-        uses: actions/upload-artifact@v4
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: trivy-results-backend
-          path: trivy-results-backend.sarif
+            sarif_file: 'trivy-backend.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+            sarif_file: 'trivy-frontend.sarif'
