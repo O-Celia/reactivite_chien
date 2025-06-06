@@ -16,6 +16,7 @@ def login():
         if st.button("Connexion"):
             response = requests.post(
                 f"{API_URL}/users/login",
+                timeout=60,
                 json={"username": username, "password": password},
             )
 
@@ -39,6 +40,7 @@ def login():
             else:
                 response = requests.post(
                     f"{API_URL}/users/",
+                    timeout=60,
                     json={
                         "username": new_username,
                         "email": new_email if new_email else None,
