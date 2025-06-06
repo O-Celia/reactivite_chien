@@ -22,14 +22,24 @@ jobs:
       - name: Installer Bandit
         run: pip install bandit
 
+      - name: Créer dossier pour résultats
+        run: mkdir -p resultats_tests
+
       - name: Lancer Bandit sur le dossier app/
-        run: bandit -r app/ -ll
+        run: bandit -r app/ -ll -f json -o resultats_tests/bandit-app.json
         continue-on-error: true
 
       - name: Lancer Bandit sur le dossier streamlit_app/
-        run: bandit -r streamlit_app/ -ll
+        run: bandit -r streamlit_app/ -ll -f json -o resultats_tests/bandit-streamlit.json
         continue-on-error: true
 
       - name: Lancer Bandit sur le dossier tests/
-        run: bandit -r tests/ -ll
+        run: bandit -r tests/ -ll -f json -o resultats_tests/bandit-tests.json
         continue-on-error: true
+
+      - name: Upload Bandit scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapports-bandit
+          path: resultats_tests/
+          retention-days: 30
