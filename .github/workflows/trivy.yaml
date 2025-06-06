@@ -17,34 +17,34 @@ jobs:
       - name: Construire toutes les images avec docker-compose
         run: docker compose build
 
+      - name: Créer le dossier pour les rapports
+        run: mkdir -p resultats_tests
+
       - name: Scanner l’image backend
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'backend-app:latest'
-          format: 'sarif'
+          format: 'json'
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          output: 'trivy-backend.sarif'
+          output: 'resultats_tests/trivy-backend.json'
 
       - name: Scanner l’image frontend
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'frontend-app:latest'
-          format: 'sarif'
+          format: 'json'
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          output: 'trivy-frontend.sarif'
+          output: 'resultats_tests/trivy-frontend.json'
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+      - name: Upload Trivy scan results
+        uses: actions/upload-artifact@v4
         with:
-            sarif_file: 'trivy-backend.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-            sarif_file: 'trivy-frontend.sarif'
+          name: rapports-trivy
+          path: resultats_tests/
+          retention-days: 30
