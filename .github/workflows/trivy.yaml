@@ -36,3 +36,9 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
+      - name: Télécharger les résultats Trivy
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results-backend
+          path: trivy-results-backend.sarif
