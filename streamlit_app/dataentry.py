@@ -4,6 +4,7 @@ import datetime
 
 API_URL = "http://localhost:8000"
 
+
 def app():
     st.title("Nouvelle observation")
 
@@ -44,8 +45,12 @@ def app():
 
     # Récupération déclencheurs / réactions
     try:
-        triggers = requests.get(f"{API_URL}/triggers/", headers=headers).json()
-        reactions = requests.get(f"{API_URL}/reactions/", headers=headers).json()
+        triggers = requests.get(
+            f"{API_URL}/triggers/", headers=headers, timeout=60
+        ).json()
+        reactions = requests.get(
+            f"{API_URL}/reactions/", headers=headers, timeout=60
+        ).json()
     except Exception as e:
         st.error(f"Erreur de chargement des déclencheurs ou réactions : {e}")
         triggers, reactions = [], []
@@ -65,23 +70,37 @@ def app():
         if st.button("Soumettre l'observation"):
 
             # Choix final du déclencheur et de la réaction
-            trigger = st.session_state.new_trigger.strip() or st.session_state.existing_trigger
-            reaction = st.session_state.new_reaction.strip() or st.session_state.existing_reaction
+            trigger = (
+                st.session_state.new_trigger.strip()
+                or st.session_state.existing_trigger
+            )
+            reaction = (
+                st.session_state.new_reaction.strip()
+                or st.session_state.existing_reaction
+            )
 
             # Création si déclencheur nouveau
             if trigger and trigger not in trigger_names:
                 trigger_payload = {"name": trigger}
-                trigger_resp = requests.post(f"{API_URL}/triggers/", json=trigger_payload, headers=headers)
+                trigger_resp = requests.post(
+                    f"{API_URL}/triggers/", json=trigger_payload, headers=headers
+                )
                 if trigger_resp.status_code not in [200, 201]:
-                    st.error(f"Erreur lors de l'ajout du déclencheur : {trigger_resp.text}")
+                    st.error(
+                        f"Erreur lors de l'ajout du déclencheur : {trigger_resp.text}"
+                    )
                     return
 
             # Création si réaction nouvelle
             if reaction and reaction not in reaction_names:
                 reaction_payload = {"name": reaction}
-                reaction_resp = requests.post(f"{API_URL}/reactions/", json=reaction_payload, headers=headers)
+                reaction_resp = requests.post(
+                    f"{API_URL}/reactions/", json=reaction_payload, headers=headers
+                )
                 if reaction_resp.status_code not in [200, 201]:
-                    st.error(f"Erreur lors de l'ajout de la réaction : {reaction_resp.text}")
+                    st.error(
+                        f"Erreur lors de l'ajout de la réaction : {reaction_resp.text}"
+                    )
                     return
 
             # Création de l'observation

@@ -4,8 +4,9 @@ import pandas as pd
 
 API_URL = "http://127.0.0.1:8000/entry"
 
+
 def app():
-    
+
     token = st.session_state.get("token", None)
     if not token:
         st.warning("Vous devez être connecté pour voir cette page.")
@@ -16,26 +17,28 @@ def app():
         """
         <h2 style='color: #4CAF50;'>🐾 Bienvenue sur votre suivi de réactivité 🐾</h2>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown("---")
 
-    st.write("""
+    st.write(
+        """
     **Mon Suivi de Réactivité** est une application simple et efficace pour :
     
     - **Ajouter des observations** sur les réactions de votre chien
     - **Analyser** son évolution dans le temps
     - **Visualiser** ses progrès sur un calendrier
     - **Rechercher** des déclencheurs spécifiques
-    """)
-    
+    """
+    )
+
     st.info("👉 Utilisez le menu de gauche pour naviguer dans l'application.")
 
     st.markdown("---")
-    
+
     # 1. Nombre d'entrées
-    response_count = requests.get(f"{API_URL}/", headers=headers)
+    response_count = requests.get(f"{API_URL}/", headers=headers, timeout=60)
     if response_count.status_code == 200:
         entries = response_count.json()
         nb_entries = len(entries)
@@ -44,7 +47,7 @@ def app():
 
     # 2. Dernière entrée
 
-    response_last = requests.get(f"{API_URL}/", headers=headers)
+    response_last = requests.get(f"{API_URL}/", headers=headers, timeout=60)
     if response_last.status_code == 200:
         entries = response_last.json()
         if entries:

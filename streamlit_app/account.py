@@ -4,6 +4,7 @@ import requests
 
 API_URL = "http://localhost:8000"
 
+
 def app():
     st.title("Mon compte")
 
@@ -15,7 +16,7 @@ def app():
     headers = {"Authorization": f"Bearer {token}"}
 
     # Récupération des infos utilisateur
-    response = requests.get(f"{API_URL}/users/me", headers=headers)
+    response = requests.get(f"{API_URL}/users/me", headers=headers, timeout=60)
 
     if response.status_code == 200:
         user_data = response.json()
@@ -25,7 +26,9 @@ def app():
 
     # Affichage et modification
     st.subheader("Modifier mes informations")
-    new_username = st.text_input("Nouveau nom d'utilisateur", value=user_data["username"])
+    new_username = st.text_input(
+        "Nouveau nom d'utilisateur", value=user_data["username"]
+    )
     new_email = st.text_input("Nouvel email", value=user_data["email"] or "")
     new_password = st.text_input("Nouveau mot de passe", type="password")
 
@@ -57,4 +60,8 @@ def app():
                 st.session_state.clear()
                 st.rerun()
             else:
-                st.error(delete.json().get("detail", "Erreur inconnue lors de la suppression."))
+                st.error(
+                    delete.json().get(
+                        "detail", "Erreur inconnue lors de la suppression."
+                    )
+                )

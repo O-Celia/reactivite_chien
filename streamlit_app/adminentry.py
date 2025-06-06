@@ -4,6 +4,7 @@ import datetime
 
 API_URL = "http://localhost:8000"
 
+
 def app():
     st.title("🛠️ Modifier ou Supprimer une Observation")
 
@@ -12,11 +13,13 @@ def app():
         st.error("Vous devez être connecté pour gérer le traitement des observations.")
         return
 
-    st.markdown("""
+    st.markdown(
+        """
     Récupérez l'ID de l'observation concernée dans l'onglet **Calendrier** (dans "Informations supplémentaires sous forme de liste").
-    """)
+    """
+    )
 
-    if 'entry_id' not in st.session_state:
+    if "entry_id" not in st.session_state:
         st.session_state.entry_id = ""
 
     if st.session_state.entry_id == "":
@@ -37,7 +40,9 @@ def app():
 
         # Récupération de l'entrée
         try:
-            entry_resp = requests.get(f"{API_URL}/entry/{entry_id}", headers=headers)
+            entry_resp = requests.get(
+                f"{API_URL}/entry/{entry_id}", headers=headers, timeout=60
+            )
             entry_resp.raise_for_status()
             entry = entry_resp.json()
         except requests.exceptions.HTTPError:
@@ -52,29 +57,45 @@ def app():
 
         # Récupération listes déclencheurs/réactions
         try:
-            triggers_list = [t['name'] for t in requests.get(f"{API_URL}/triggers/", headers=headers).json()]
-            reactions_list = [r['name'] for r in requests.get(f"{API_URL}/reactions/", headers=headers).json()]
+            triggers_list = [
+                t["name"]
+                for t in requests.get(
+                    f"{API_URL}/triggers/", headers=headers, timeout=60
+                ).json()
+            ]
+            reactions_list = [
+                r["name"]
+                for r in requests.get(
+                    f"{API_URL}/reactions/", headers=headers, timeout=60
+                ).json()
+            ]
         except Exception as e:
-            st.warning(f"Erreur lors de la récupération des déclencheurs ou réactions : {e}")
+            st.warning(
+                f"Erreur lors de la récupération des déclencheurs ou réactions : {e}"
+            )
             triggers_list = []
             reactions_list = []
 
         # Champs modifiables
         st.subheader("✏️ Modifier l'entrée")
 
-        entry_date = st.date_input("Date", value=datetime.date.fromisoformat(entry["entry_date"]))
+        entry_date = st.date_input(
+            "Date", value=datetime.date.fromisoformat(entry["entry_date"])
+        )
         severity = st.slider("Gravité", 1, 5, entry["severity"])
         comment = st.text_area("Commentaire", value=entry.get("comment", ""))
 
         selected_trigger = st.selectbox(
-            "Déclencheur", 
-            triggers_list, 
-            index=triggers_list.index(entry["triggers"][0]) if entry["triggers"] else 0
+            "Déclencheur",
+            triggers_list,
+            index=triggers_list.index(entry["triggers"][0]) if entry["triggers"] else 0,
         )
         selected_reaction = st.selectbox(
-            "Réaction", 
-            reactions_list, 
-            index=reactions_list.index(entry["reactions"][0]) if entry["reactions"] else 0
+            "Réaction",
+            reactions_list,
+            index=(
+                reactions_list.index(entry["reactions"][0]) if entry["reactions"] else 0
+            ),
         )
 
         col1, col2, col3 = st.columns(3)
@@ -89,7 +110,9 @@ def app():
                     "reactions": [selected_reaction],
                 }
                 try:
-                    update_resp = requests.put(f"{API_URL}/entry/{entry_id}", headers=headers, json=payload)
+                    update_resp = requests.put(
+                        f"{API_URL}/entry/{entry_id}", headers=headers, json=payload
+                    )
                     update_resp.raise_for_status()
                     st.success("✅ Entrée modifiée avec succès.")
                     st.session_state.entry_id = ""
@@ -100,7 +123,9 @@ def app():
         with col2:
             if st.button("🗑️ Supprimer l'entrée"):
                 try:
-                    delete_resp = requests.delete(f"{API_URL}/entry/{entry_id}", headers=headers)
+                    delete_resp = requests.delete(
+                        f"{API_URL}/entry/{entry_id}", headers=headers
+                    )
                     delete_resp.raise_for_status()
                     st.success("✅ Entrée supprimée.")
                     st.session_state.entry_id = ""
