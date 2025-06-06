@@ -1,0 +1,27 @@
+name: Scan de sécurité Trivy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  trivy-scan:
+    name: Scan de l'image Docker avec Trivy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      - name: Installer Trivy
+        uses: aquasecurity/trivy-action@v0.13.1
+
+      - name: Construire toutes les images avec docker-compose
+        run: docker compose build
+
+      - name: Scanner l’image backend
+        run: trivy image --exit-code 1 --severity HIGH,CRITICAL backend-app:latest
+
+      - name: Scanner l’image frontend
+        run: trivy image --exit-code 1 --severity HIGH,CRITICAL frontend-app:latest

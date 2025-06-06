@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: app/dockerfile
+    image: backend-app:latest
+    volumes:
+      - ./data/db.sqlite3:/data/db.sqlite3
+    ports: []
+
+  frontend:
+    build:
+      context: .
+      dockerfile: streamlit_app/dockerfile
+    image: frontend-app:latest
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend

@@ -35,6 +35,7 @@ app/
 │   ├── trigger.py
 │   └── user.py
 ├── main.py             # Point d'entrée de l'API FastAPI
+├── dockerfile
 └── requirements.txt    # Dépendances Python de l'application
 ```
 

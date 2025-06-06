@@ -6,7 +6,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 
 ## Objectifs
 
-### V1 – Projet local démontrant mes compétences :
+### V1 – Projet local :
 - Backend API REST avec **FastAPI**
 - Frontend web simple avec **Streamlit**
 - Base de données **SQLite**
@@ -40,8 +40,6 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── sql/                  # Fichiers de données MySQL
 ├── .github/workflows/    # CI/CD GitHub Actions
 ├── docker-compose.yml
-├── Dockerfile.api
-├── Dockerfile.streamlit
 ├── README.md
 ├── Cahier des charges.md
 ├── .gitignore
