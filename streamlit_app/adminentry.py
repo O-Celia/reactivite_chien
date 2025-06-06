@@ -111,7 +111,10 @@ def app():
                 }
                 try:
                     update_resp = requests.put(
-                        f"{API_URL}/entry/{entry_id}", headers=headers, json=payload
+                        f"{API_URL}/entry/{entry_id}",
+                        headers=headers,
+                        timeout=60,
+                        json=payload,
                     )
                     update_resp.raise_for_status()
                     st.success("✅ Entrée modifiée avec succès.")
@@ -124,7 +127,7 @@ def app():
             if st.button("🗑️ Supprimer l'entrée"):
                 try:
                     delete_resp = requests.delete(
-                        f"{API_URL}/entry/{entry_id}", headers=headers
+                        f"{API_URL}/entry/{entry_id}", headers=headers, timeout=60
                     )
                     delete_resp.raise_for_status()
                     st.success("✅ Entrée supprimée.")

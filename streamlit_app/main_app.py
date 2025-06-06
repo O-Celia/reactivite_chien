@@ -103,6 +103,7 @@ def main():
                 requests.post(
                     f"{API_URL}/triggers/clone_selected",
                     headers=headers,
+                    timeout=60,
                     json={
                         "trigger_ids": [
                             trigger_options[name] for name in selected_triggers
@@ -113,6 +114,7 @@ def main():
                 requests.post(
                     f"{API_URL}/reactions/clone_selected",
                     headers=headers,
+                    timeout=60,
                     json={
                         "reaction_ids": [
                             reaction_options[name] for name in selected_reactions
@@ -121,7 +123,10 @@ def main():
                 )
 
             requests.patch(
-                f"{API_URL}/users/me", headers=headers, json={"first_login": False}
+                f"{API_URL}/users/me",
+                headers=headers,
+                timeout=60,
+                json={"first_login": False},
             )
             st.success("C’est enregistré ! Tu peux maintenant utiliser ton espace.")
             st.rerun()

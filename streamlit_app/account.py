@@ -41,7 +41,9 @@ def app():
         if new_password:
             payload["password"] = new_password
 
-        update = requests.put(f"{API_URL}/users/me", json=payload, headers=headers)
+        update = requests.put(
+            f"{API_URL}/users/me", json=payload, headers=headers, timeout=60
+        )
 
         if update.status_code == 200:
             st.success("Informations mises à jour.")
@@ -54,7 +56,7 @@ def app():
     confirm = st.checkbox("Je confirme la suppression de mon compte")
     if confirm:
         if st.button("🗑️ Supprimer mon compte"):
-            delete = requests.delete(f"{API_URL}/users/me", headers=headers)
+            delete = requests.delete(f"{API_URL}/users/me", headers=headers, timeout=60)
             if delete.status_code == 200:
                 st.success("Compte supprimé.")
                 st.session_state.clear()

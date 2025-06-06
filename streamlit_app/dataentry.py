@@ -83,7 +83,10 @@ def app():
             if trigger and trigger not in trigger_names:
                 trigger_payload = {"name": trigger}
                 trigger_resp = requests.post(
-                    f"{API_URL}/triggers/", json=trigger_payload, headers=headers
+                    f"{API_URL}/triggers/",
+                    json=trigger_payload,
+                    headers=headers,
+                    timeout=60,
                 )
                 if trigger_resp.status_code not in [200, 201]:
                     st.error(
@@ -95,7 +98,10 @@ def app():
             if reaction and reaction not in reaction_names:
                 reaction_payload = {"name": reaction}
                 reaction_resp = requests.post(
-                    f"{API_URL}/reactions/", json=reaction_payload, headers=headers
+                    f"{API_URL}/reactions/",
+                    json=reaction_payload,
+                    headers=headers,
+                    timeout=60,
                 )
                 if reaction_resp.status_code not in [200, 201]:
                     st.error(
@@ -112,7 +118,9 @@ def app():
                 "reactions": [reaction] if reaction else [],
             }
 
-            resp = requests.post(f"{API_URL}/entry/", json=payload, headers=headers)
+            resp = requests.post(
+                f"{API_URL}/entry/", json=payload, headers=headers, timeout=60
+            )
             if resp.status_code in [200, 201]:
                 st.success("Observation enregistrée avec succès.")
             else:

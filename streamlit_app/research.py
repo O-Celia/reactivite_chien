@@ -98,7 +98,7 @@ def app():
 
             try:
                 response = requests.post(
-                    f"{API_URL}/search/", headers=headers, json=payload
+                    f"{API_URL}/search/", headers=headers, timeout=60, json=payload
                 )
                 response.raise_for_status()
                 results = response.json()

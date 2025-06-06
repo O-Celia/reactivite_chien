@@ -39,7 +39,9 @@ def app():
             if st.button("🗑️ Supprimer", key=f"delete_trigger_{trigger['id']}"):
                 try:
                     requests.delete(
-                        f"{API_URL}/triggers/{trigger['id']}", headers=headers
+                        f"{API_URL}/triggers/{trigger['id']}",
+                        headers=headers,
+                        timeout=60,
                     )
                     st.rerun()
                 except Exception as e:
@@ -49,6 +51,7 @@ def app():
                 requests.put(
                     f"{API_URL}/triggers/{trigger['id']}",
                     headers=headers,
+                    timeout=60,
                     json={"name": new_name},
                 )
                 st.rerun()
@@ -66,6 +69,7 @@ def app():
                 requests.post(
                     f"{API_URL}/triggers/",
                     headers=headers,
+                    timeout=60,
                     json={"name": new_trigger_name},
                 )
                 st.rerun()
@@ -99,7 +103,9 @@ def app():
             if st.button("🗑️ Supprimer", key=f"delete_reaction_{reaction['id']}"):
                 try:
                     requests.delete(
-                        f"{API_URL}/reactions/{reaction['id']}", headers=headers
+                        f"{API_URL}/reactions/{reaction['id']}",
+                        headers=headers,
+                        timeout=60,
                     )
                     st.rerun()
                 except Exception as e:
@@ -109,6 +115,7 @@ def app():
                 requests.put(
                     f"{API_URL}/reactions/{reaction['id']}",
                     headers=headers,
+                    timeout=60,
                     json={"name": new_name},
                 )
                 st.rerun()
@@ -126,6 +133,7 @@ def app():
                 requests.post(
                     f"{API_URL}/reactions/",
                     headers=headers,
+                    timeout=60,
                     json={"name": new_reaction_name},
                 )
                 st.rerun()
