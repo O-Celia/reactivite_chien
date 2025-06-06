@@ -21,7 +21,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'backend-app:latest'
-          format: 'table'
+          format: 'sarif'
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
@@ -32,7 +32,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: 'frontend-app:latest'
-          format: 'table'
+          format: 'sarif'
           exit-code: '0'
           ignore-unfixed: true
           vuln-type: 'os,library'
