@@ -101,7 +101,7 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Sécurité :**
 - Gestion des secrets et variables d’environnement avec des fichiers .env.
-- OWASP ZAP pour audit de sécurité de l'application.
+- Bandit pour la sécurité du code Python dans GitHub Actions.
 - Trivy pour scanner les vulnérabilités des conteneurs dans GitHub Actions.
 - Pytest pour les tests des routes.
 

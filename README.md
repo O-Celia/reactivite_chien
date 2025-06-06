@@ -14,7 +14,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Authentification simplifiée (JWT)
 - Tests unitaires avec **Pytest**
 - Conteneurisation du backend et frontend avec **Docker**
-- OWASP ZAP et Trivy pour l'application des bonnes pratiques de sécurisation
+- Bandit et Trivy pour l'application des bonnes pratiques de sécurisation
 
 ### V2 – Extension cloud native (non déployée mais préparée)
 - Infrastructure as Code avec **Terraform** dans `/infra`

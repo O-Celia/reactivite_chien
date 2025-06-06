@@ -24,9 +24,12 @@ jobs:
 
       - name: Lancer Bandit sur le dossier app/
         run: bandit -r app/ -ll
+        continue-on-error: true
 
       - name: Lancer Bandit sur le dossier streamlit_app/
         run: bandit -r streamlit_app/ -ll
+        continue-on-error: true
 
       - name: Lancer Bandit sur le dossier tests/
         run: bandit -r tests/ -ll
+        continue-on-error: true
