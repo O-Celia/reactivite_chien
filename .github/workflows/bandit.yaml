@@ -1,0 +1,32 @@
+name: Analyse de sécurité Bandit
+
+on:
+  push:
+    branches: main
+  workflow_dispatch:
+
+
+jobs:
+  bandit-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configurer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer Bandit
+        run: pip install bandit
+
+      - name: Lancer Bandit sur le dossier app/
+        run: bandit -r app/ -ll
+
+      - name: Lancer Bandit sur le dossier streamlit_app/
+        run: bandit -r streamlit_app/ -ll
+
+      - name: Lancer Bandit sur le dossier tests/
+        run: bandit -r tests/ -ll

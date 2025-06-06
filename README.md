@@ -14,7 +14,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Authentification simplifiée (JWT)
 - Tests unitaires avec **Pytest**
 - Conteneurisation du backend et frontend avec **Docker**
-- OWASP pour l'application des bonnes pratiques de sécurisation
+- OWASP ZAP et Trivy pour l'application des bonnes pratiques de sécurisation
 
 ### V2 – Extension cloud native (non déployée mais préparée)
 - Infrastructure as Code avec **Terraform** dans `/infra`
@@ -60,7 +60,7 @@ docker-compose up --build
 | **Backend**       | FastAPI, Pydantic, Pandas, SQLite                        |
 | **Frontend**      | Streamlit, Matplotlib / Plotly                           |
 | **Tests**         | Pytest                                                   |
-| **DevOps**        | Docker, GitHub Actions (v2)                                   |
+| **DevOps**        | Docker, GitHub Actions                                   |
 | **Observabilité** | Elasticsearch, Kibana (v2)                                |
 | **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (v2) |
 

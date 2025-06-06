@@ -26,7 +26,6 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Authentification simple
 - Saisie manuelle des déclencheurs et réactions
 - Calendrier avec visualisation journalière
-- Dashboard Power BI via un lien
 - Dashboard avec des analyses graphiques
 
 ## 2. Spécifications fonctionnelles
@@ -99,12 +98,12 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Analyse de données :**
 - Graphiques Plotly/Matplotlib pour visualisations des données.
-- PowerBI Service via ajout d'un lien Web avec graphiques interactifs.
 
 **Sécurité :**
 - Gestion des secrets et variables d’environnement avec des fichiers .env.
-- OWASP pour audit de sécurité.
-- Pytest dans GitHub Actions.
+- OWASP ZAP pour audit de sécurité de l'application.
+- Trivy pour scanner les vulnérabilités des conteneurs dans GitHub Actions.
+- Pytest pour les tests des routes.
 
 ## 4. Interface utilisateur
 
@@ -143,8 +142,9 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Installation des outils :**
 - Python, pip, et modules nécessaires : fastapi, uvicorn, sqlalchemy, streamlit, etc.
-- Power BI Desktop.
 - Docker
+- GitHub Actions
+- Trivy
 
 **Planification BDD :**
 - Utilisateurs
@@ -193,7 +193,6 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 ### 5.4. Analyse des données
 
 - Publication de graphiques avec Matplotlib / Plotly.
-- Graphiques interactifs sur PowerBi Service.
 - Export PDF des données.
 
 ### 5.5. Automatisation DevOps
