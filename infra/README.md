@@ -20,25 +20,20 @@ graph TD
     T[Traefik]
     B[Application Streamlit]
     C[API REST FastAPI]
-    E[Elasticsearch]
     H[Prometheus]
     I[Vault]
     J[Grafana]
-    K[Kibana]
   end
 
   A -->|HTTP| T
   T --> B
   T --> C
 
-  C --> E
-  C --> F[Power BI Desktop / Service]
   C --> H
   C --> I
   C --> DB
 
   H --> J
-  E --> K
 
   L --> K3s-Cluster
 ```
@@ -67,17 +62,10 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 | **K3s**          | Cluster Kubernetes léger pour orchestrer les services applicatifs       |
 | **Traefik**      | Ingress Controller pour router les requêtes HTTP/HTTPS                  |
 | **Vault**        | Gestion sécurisée des secrets et des credentials                        |
-| **Elasticsearch**| Indexation et stockage des logs structurés                              |
-| **Kibana**       | Exploration et visualisation des logs via interface                     |
 | **Prometheus**   | Collecte des métriques système et applicatives                          |
 | **Grafana**      | Tableaux de bord pour visualiser les métriques                          |
-| **Power BI**     | Service et Desktop : Exploration, analyse et visualisation des données utilisateur           |
 
 ## 🔍 Observabilité
-
-**Logs applicatifs :**
-- Elasticsearch collecte les logs structurés de l’API, des containers, etc.
-- Kibana permet de visualiser, filtrer et analyser les logs.
 
 **Métriques système et app :**
 - Prometheus collecte des métriques en temps réel (CPU, mémoire, requêtes HTTP…).
@@ -96,7 +84,6 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 | **Streamlit**   | —      | Accessible via Traefik                                          |
 | **FastAPI**     | —      | Accessible via Traefik                                          |
 | **Grafana**     | 3000   | Interface web pour les dashboards                               |
-| **Kibana**      | 5601   | Interface web de visualisation des logs                         |
 | **Vault**       | 8200   | Interface UI et API REST de Vault                               |
 | **Prometheus**  | 9090   | Interface de visualisation et requêtage PromQL                  |
 
