@@ -38,6 +38,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 ├── tests/                # Tests unitaires
 ├── data/                 # Fichiers de données (SQLite)
 ├── sql/                  # Fichiers de données MySQL
+├── email_password/       # Fichiers de gestion de l'authentification
 ├── .github/workflows/    # CI/CD GitHub Actions
 ├── docker-compose.yml
 ├── README.md
@@ -53,7 +54,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 docker-compose up --build
 ```
 
-## Technologies utilisées
+### Technologies utilisées
 
 | **Type**          | **Stack**                                                |
 |-------------------|----------------------------------------------------------|
@@ -69,3 +70,14 @@ docker-compose up --build
 ## Expansion (V2 – cloud ready)
 
 Voir /infra/README.md pour le diagramme de l’architecture cible et les premiers fichiers Terraform.
+
+### Gestion de l'authentification par email & mot de passe
+
+Même si l’authentification est simplifiée en V1 (JWT sans gestion de mot de passe), une architecture complète de gestion des utilisateurs par email et mot de passe a été préparée et décrite dans le /email_password/README.md.
+
+### Pourquoi ?
+
+Bien que ces fonctionnalités ne soient pas encore activées en local, elles sont conçues pour une future version cloud-native (V2) de l’application. Cela permet :
+- Une montée en charge facilitée
+- Une meilleure sécurité utilisateur
+- Une interface prête pour un déploiement réel avec gestion d’utilisateurs
