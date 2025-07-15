@@ -69,6 +69,24 @@ def app():
     with col1:
         if st.button("Soumettre l'observation"):
 
+            if (
+                st.session_state.new_trigger.strip()
+                and st.session_state.existing_trigger
+            ):
+                st.error(
+                    "Veuillez soit choisir un déclencheur existant, soit en ajouter un nouveau, pas les deux."
+                )
+                return
+
+            if (
+                st.session_state.new_reaction.strip()
+                and st.session_state.existing_reaction
+            ):
+                st.error(
+                    "Veuillez soit choisir une réaction existante, soit en ajouter une nouvelle, pas les deux."
+                )
+                return
+
             # Choix final du déclencheur et de la réaction
             trigger = (
                 st.session_state.new_trigger.strip()

@@ -2,15 +2,17 @@ from pydantic import BaseModel, ConfigDict
 from datetime import date, datetime
 from typing import List, Optional
 
+
 class DailyEntryBase(BaseModel):
     entry_date: date
     severity: int
     comment: Optional[str] = None
 
+
 class DailyEntryCreate(DailyEntryBase):
     triggers: List[str]
     reactions: List[str]
-    user_id: int
+
 
 class DailyEntryRead(DailyEntryBase):
     id: int
@@ -21,6 +23,7 @@ class DailyEntryRead(DailyEntryBase):
 
     class ConfigDict:
         from_attributes = True
+
 
 class DailyEntryUpdate(BaseModel):
     entry_date: Optional[date] = None

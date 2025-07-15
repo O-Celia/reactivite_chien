@@ -123,11 +123,6 @@ def main():
                 json={"first_login": False},
             )
             st.success("C’est enregistré ! Tu peux maintenant utiliser ton espace.")
-            st.write("Triggers sélectionnés :", selected_triggers)
-            st.write(
-                "Payload triggers :",
-                [trigger_options[name] for name in selected_triggers],
-            )
 
             st.rerun()
     else:
