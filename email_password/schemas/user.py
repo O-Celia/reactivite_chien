@@ -16,6 +16,7 @@ class UserUpdate(BaseModel):
     username: str | None = None
     email: str
     password: str | None = None
+    first_login: bool | None = None
 
 
 class UserRead(UserBase):
