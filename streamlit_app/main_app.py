@@ -11,13 +11,12 @@ def login():
 
     if auth_mode == "Connexion":
         username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
 
         if st.button("Connexion"):
             response = requests.post(
                 f"{API_URL}/users/login",
                 timeout=60,
-                json={"username": username, "password": password},
+                json={"username": username},
             )
 
             if response.status_code in (200, 201):
@@ -27,35 +26,26 @@ def login():
                 st.success("Connecté !")
                 st.rerun()
             else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect")
+                st.error("Nom d'utilisateur incorrect")
 
     elif auth_mode == "Créer un compte":
         new_username = st.text_input("Nom d'utilisateur", key="signup_user")
-        new_email = st.text_input("Email", key="signup_email")
-        new_password = st.text_input("Mot de passe", type="password", key="signup_pass")
 
         if st.button("Créer le compte"):
-            if not new_password:
-                st.warning("Le mot de passe est obligatoire.")
-            else:
-                response = requests.post(
-                    f"{API_URL}/users/",
-                    timeout=60,
-                    json={
-                        "username": new_username,
-                        "email": new_email if new_email else None,
-                        "password": new_password,
-                    },
-                )
+            response = requests.post(
+                f"{API_URL}/users/",
+                timeout=60,
+                json={
+                    "username": new_username,
+                },
+            )
 
-                if response.status_code in (201, 200):
-                    st.success("Compte créé ! Vous pouvez maintenant vous connecter.")
-                elif response.status_code == 400:
-                    st.error("Nom d'utilisateur déjà pris.")
-                else:
-                    st.error(
-                        f"Erreur : {response.json().get('detail', 'Erreur inconnue')}"
-                    )
+            if response.status_code in (201, 200):
+                st.success("Compte créé ! Vous pouvez maintenant vous connecter.")
+            elif response.status_code == 400:
+                st.error("Nom d'utilisateur déjà pris.")
+            else:
+                st.error(f"Erreur : {response.json().get('detail', 'Erreur inconnue')}")
 
 
 def main():
@@ -107,9 +97,10 @@ def main():
                     headers=headers,
                     timeout=60,
                     json={
+                        "user_id": user_info["id"],
                         "trigger_ids": [
                             trigger_options[name] for name in selected_triggers
-                        ]
+                        ],
                     },
                 )
             if selected_reactions:
@@ -118,9 +109,10 @@ def main():
                     headers=headers,
                     timeout=60,
                     json={
+                        "user_id": user_info["id"],
                         "reaction_ids": [
                             reaction_options[name] for name in selected_reactions
-                        ]
+                        ],
                     },
                 )
 
@@ -131,6 +123,12 @@ def main():
                 json={"first_login": False},
             )
             st.success("C’est enregistré ! Tu peux maintenant utiliser ton espace.")
+            st.write("Triggers sélectionnés :", selected_triggers)
+            st.write(
+                "Payload triggers :",
+                [trigger_options[name] for name in selected_triggers],
+            )
+
             st.rerun()
     else:
         show_app()

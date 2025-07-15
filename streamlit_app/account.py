@@ -29,17 +29,11 @@ def app():
     new_username = st.text_input(
         "Nouveau nom d'utilisateur", value=user_data["username"]
     )
-    new_email = st.text_input("Nouvel email", value=user_data["email"] or "")
-    new_password = st.text_input("Nouveau mot de passe", type="password")
 
     if st.button("Mettre à jour mes infos"):
         payload = {}
         if new_username:
             payload["username"] = new_username
-        if new_email:
-            payload["email"] = new_email
-        if new_password:
-            payload["password"] = new_password
 
         update = requests.put(
             f"{API_URL}/users/me", json=payload, headers=headers, timeout=60

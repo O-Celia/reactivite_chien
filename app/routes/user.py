@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from crud import user as crud_user
 from schemas.user import UserCreate, UserRead, UserUpdate, TokenResponse, LoginData
 from typing import List
 from utils.dependencies import get_current_user
-from utils.auth import verify_password, create_access_token
+from utils.auth import create_access_token
 from models.user import User
 
 # routes commentées tant qu'il n'y a pas de profil admin
@@ -68,6 +67,7 @@ def update_own_profile(
 #         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
 #     return db_user
 
+
 # @user_router.delete("/id/{user_id}", response_model=UserRead)
 # def delete_user(user_id: int, db: Session = Depends(get_db)):
 #     db_user = crud_user.delete_user(db, user_id)
@@ -86,18 +86,16 @@ def delete_own_account(
 @user_router.post("/login", response_model=TokenResponse)
 def login_json(data: LoginData, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_username(db, data.username)
-    if (
-        not db_user
-        or not db_user.hashed_password
-        or not verify_password(data.password, db_user.hashed_password)
-    ):
-        raise HTTPException(
-            status_code=401, detail="Nom d'utilisateur ou mot de passe incorrect"
-        )
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Nom d'utilisateur incorrect")
     token = create_access_token(data={"sub": db_user.username})
     return {"access_token": token, "token_type": "bearer"}
 
 
-@user_router.patch("/{user_id}")
-def update_user_login(user_id: int, update_data: dict, db: Session = Depends(get_db)):
-    return crud_user.update_user_login(user_id, update_data, db)
+@user_router.patch("/me")
+def update_user_login(
+    update_data: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return crud_user.update_user_login(current_user.id, update_data, db)
