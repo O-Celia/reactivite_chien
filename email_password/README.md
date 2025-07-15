@@ -1,0 +1,1 @@
+# Authentification étendue avec email & mot de passe (préparation Cloud - V2)
