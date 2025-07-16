@@ -1,10 +1,10 @@
-# ☁️ Infrastructure cible – V2 Cloud
+# Infrastructure cible – V2 Cloud
 
 Cette section décrit une architecture cloud évolutive, pensée pour un déploiement de production futur du projet. Elle repose sur Oracle Cloud Infrastructure, un cluster Kubernetes léger (K3s), et des outils DevOps/Data pour l'observabilité, la sécurité et l’analyse.
 
 ---
 
-## 🔧 Diagramme d'architecture (Mermaid)
+## Diagramme d'architecture (Mermaid)
 ```mermaid
 graph TD
   subgraph Utilisateur
@@ -40,7 +40,7 @@ graph TD
 
 ---
 
-## 📁 Dossier /infra
+## Dossier /infra
 
 Ce dossier contient la définition de l’infrastructure as code pour déployer l’environnement cloud.
 
@@ -53,9 +53,9 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 └── README.md             # Documentation de l’infrastructure (ce fichier)
 ```
 
-## 🌐 Technologies prévues
+## Technologies prévues
 
-| 🛠️ Outil         | 🎯 Rôle                                                                 |
+| Outil         | Rôle                                                                 |
 |------------------|------------------------------------------------------------------------|
 | **Terraform**    | Provisioning automatisé de l'infrastructure (réseau, compute, DB…)     |
 | **Oracle Cloud** | Fournisseur cloud principal (VCN, Autonomous DB, compute instances)     |
@@ -65,7 +65,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 | **Prometheus**   | Collecte des métriques système et applicatives                          |
 | **Grafana**      | Tableaux de bord pour visualiser les métriques                          |
 
-## 🔍 Observabilité
+## Observabilité
 
 **Métriques système et app :**
 - Prometheus collecte des métriques en temps réel (CPU, mémoire, requêtes HTTP…).
@@ -75,9 +75,9 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 - Vault est utilisé pour gérer les tokens d'accès API, credentials base de données, secrets d'applications, etc.
 - Accès sécurisé aux endpoints via Traefik, avec possibilité d’ajouter un certificat TLS auto-géré ou via cert-manager.
 
-## 🔁 Réseau, ports exposés et accès
+## Réseau, ports exposés et accès
 
-| 🧱 Composant   | 🔌 Port | 📝 Description                                                  |
+| Composant   | Port | Description                                                  |
 |----------------|--------|------------------------------------------------------------------|
 | **Traefik**     | 80     | HTTP (accès public aux services via Ingress)                    |
 |                | 443    | HTTPS (avec TLS si cert-manager est activé)                     |
@@ -89,7 +89,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 
 Tous ces services sont routés via Traefik en interne, ce qui signifie que seuls les ports 80/443 doivent être exposés publiquement (les autres restent internes au cluster).
 
-## 🔐 Gestion TLS avec cert-manager (optionnel)
+## Gestion TLS avec cert-manager (optionnel)
 
 Pour sécuriser les communications via HTTPS :
 - cert-manager peut être installé dans le cluster K3s.
