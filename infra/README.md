@@ -134,15 +134,15 @@ helm install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
   --set installCRDs=true
-kubectl apply -f cluster-issuer.yaml
+kubectl apply -f cert-manager/cluster-issuer.yaml
 ```
 
 ### Déployer Traefik (Ingress Controller)
 
 ```bash
-kubectl apply -f traefik/namespace.yaml
-kubectl apply -f traefik/traefik-deployment.yaml
-kubectl apply -f traefik/traefik-service.yaml
+kubectl apply -f k8s/traefik/namespace.yaml
+kubectl apply -f k8s/traefik/traefik-deployment.yaml
+kubectl apply -f k8s/traefik/traefik-service.yaml
 ```
 
 ### Déployer Vault
@@ -156,8 +156,8 @@ kubectl apply -f vault/vault-service.yaml
 ### Déployer les outils d’observabilité (Prometheus / Grafana)
 
 ```bash
-kubectl apply -f monitoring/prometheus.yaml
-kubectl apply -f monitoring/grafana.yaml
+kubectl apply -f k8s/prometheus-grafana/prometheus.yaml
+kubectl apply -f k8s/prometheus-grafana/grafana.yaml
 ```
 
 ### Connexion à une base de données MySQL sur GCP
@@ -166,6 +166,7 @@ kubectl apply -f monitoring/grafana.yaml
 2. Autoriser les connexions via Cloud SQL Proxy
 3. Créer les tables depuis FastAPI :
 ```bash
+cd ..
 python app/init_db.py
 ```
 
@@ -177,7 +178,7 @@ Ce projet utilise des variables sensibles (comme des clés API) qui ne sont pas 
 
 Il est nécessaire de copier le fichier d'exemple, puis remplacer les valeurs par les vraies clés encodées en base64 :
 ```bash
-cp k8s/fastapi-secret-example.yaml k8s/fastapi-secret.yaml
+cp k8s/fastapi/fastapi-secret-example.yaml k8s/fastapi/fastapi-secret.yaml
 ```
 Pour encoder en base6:
 ```bash
@@ -187,7 +188,7 @@ Il faut également indiquer les paramètres de l'URL de la base de données DATA
 
 #### Étape 2 – Appliquer le secret à Kubernetes
 ```bash
-kubectl apply -f k8s/fastapi-secret.yaml
+kubectl apply -f k8s/fastapi/fastapi-secret.yaml
 ```
 
 ### Déployer l'application
@@ -195,17 +196,17 @@ kubectl apply -f k8s/fastapi-secret.yaml
 #### FastAPI
 
 ```bash
-kubectl apply -f fastapi/deployment.yaml
-kubectl apply -f fastapi/service.yaml
-kubectl apply -f fastapi/ingress.yaml
+kubectl apply -f k8s/fastapi/deployment.yaml
+kubectl apply -f k8s/fastapi/service.yaml
+kubectl apply -f k8s/fastapi/ingress.yaml
 ```
 
 #### Streamlit
 
 ```bash
-kubectl apply -f streamlit/deployment.yaml
-kubectl apply -f streamlit/service.yaml
-kubectl apply -f streamlit/ingress.yaml
+kubectl apply -f k8s/streamlit/deployment.yaml
+kubectl apply -f k8s/streamlit/service.yaml
+kubectl apply -f k8s/streamlit/ingress.yaml
 ```
 
 ---
