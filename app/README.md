@@ -36,6 +36,7 @@ app/
 │   └── user.py
 ├── main.py             # Point d'entrée de l'API FastAPI
 ├── dockerfile
+├── .dockerignore
 └── requirements.txt    # Dépendances Python de l'application
 ```
 

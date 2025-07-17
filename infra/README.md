@@ -44,12 +44,39 @@ graph TD
 
 Ce dossier contient la définition de l’infrastructure as code pour déployer l’environnement cloud.
 
-```
-/infra
+```bash
+infra/
+│
 ├── main.tf               # Déclaration principale (VCN, compute, DB, K8s, etc.)
 ├── variables.tf          # Paramètres configurables de l'infra
 ├── outputs.tf            # Variables de sortie utiles (IP publiques, URLs, etc.)
 ├── providers.tf          # Configuration du provider Google Cloud
+├── cert-manager
+│   ├── certificate.yaml
+│   └── cluster-issuer.yaml
+├── k8s
+│   ├── fastapi
+│   │   ├── deployment
+│   │   ├── fastapi-secret
+│   │   ├── fastapi-secret-example
+│   │   ├── ingress
+│   │   └── service
+│   ├── prometheus-grafana
+│   │   ├── grafana
+│   │   └── prometheus
+│   ├── streamlit
+│   │   ├── deployment
+│   │   ├── ingress
+│   │   └── service
+│   └── traefik
+│       ├── ingress
+│       ├── namespace
+│       ├── traefik-deployment
+│       └── traefik-service
+├── vault
+│   ├── namespace.yaml
+│   ├── vault-deployment.yaml
+│   └── vault-service.yaml
 └── README.md             # Documentation de l’infrastructure (ce fichier)
 ```
 
