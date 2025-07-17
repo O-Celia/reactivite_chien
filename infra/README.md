@@ -170,14 +170,15 @@ cd ..
 python app/init_db.py
 ```
 
-### Configurer les secrets (API Key, SECRET_KEY)
+### Configurer les secrets (API Key, SECRET_KEY, URL BDD)
 
 Ce projet utilise des variables sensibles (comme des clés API) qui ne sont pas stockées dans le dépôt Git. Pour cela, les secrets sont gérés via Kubernetes Secrets.
 
 #### Étape 1 – Créer le fichier de secrets localement
 
-Il est nécessaire de copier le fichier d'exemple, puis remplacer les valeurs par les vraies clés encodées en base64 :
+Il est nécessaire de copier le fichier d'exemple, puis remplacer les valeurs de APIKEY et SECRET_KEY par les vraies clés encodées en base64 :
 ```bash
+cd infra
 cp k8s/fastapi/fastapi-secret-example.yaml k8s/fastapi/fastapi-secret.yaml
 ```
 Pour encoder en base6:
@@ -219,5 +220,5 @@ Ce projet est une **projection d’architecture cloud**. Le déploiement réel n
 
 Les Ingress sont configurés avec des noms fictifs comme :
 - streamlit.monapp.com
-- fastapi.monapp.com
+- fastapi.monapp.com <br>
 Ils nécessitent un DNS pointant vers l'IP du LoadBalancer. Ce projet ne prévoit pas l’achat de domaine. 
