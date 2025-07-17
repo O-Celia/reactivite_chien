@@ -35,7 +35,7 @@ graph TD
 
   H --> J
 
-  L --> K3s-Cluster
+  L --> K8s-Cluster
 ```
 
 ---
@@ -46,7 +46,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 
 ```
 /infra
-├── main.tf               # Déclaration principale (VCN, compute, DB, K3s, etc.)
+├── main.tf               # Déclaration principale (VCN, compute, DB, K8s, etc.)
 ├── variables.tf          # Paramètres configurables de l'infra
 ├── outputs.tf            # Variables de sortie utiles (IP publiques, URLs, etc.)
 ├── providers.tf          # Configuration du provider Oracle Cloud
@@ -59,7 +59,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 |------------------|------------------------------------------------------------------------|
 | **Terraform**    | Provisioning automatisé de l'infrastructure (réseau, compute, DB…)     |
 | **GCP (GKE)** | Fournisseur cloud principal (VCN, Autonomous DB, compute instances)     |
-| **K3s/GKE**          | Cluster Kubernetes léger pour orchestrer les services applicatifs       |
+| **K8s/GKE**          | Cluster Kubernetes léger pour orchestrer les services applicatifs       |
 | **Traefik**      | Ingress Controller pour router les requêtes HTTP/HTTPS                  |
 | **Vault**        | Gestion sécurisée des secrets et des credentials                        |
 | **Prometheus**   | Collecte des métriques système et applicatives                          |
@@ -92,7 +92,7 @@ Tous ces services sont routés via Traefik en interne, ce qui signifie que seuls
 ### Gestion TLS avec cert-manager
 
 Pour sécuriser les communications via HTTPS :
-- cert-manager peut être installé dans le cluster K3s.
+- cert-manager peut être installé dans le cluster K8s.
 - Il permet l’émission et le renouvellement automatique de certificats TLS via Let's Encrypt.
 - Traefik est compatible avec cert-manager et peut être configuré pour :
   - Rediriger automatiquement tout le trafic HTTP vers HTTPS.
