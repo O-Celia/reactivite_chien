@@ -22,8 +22,8 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Secrets Management avec **Vault**
 - CI/CD avec **GitHub Actions**
 - Dockerisation complète via **Docker Compose**
-- Base de données Cloud (Oracle Autonomous Database)
-- Déploiement dans un environnement cloud (Oracle) ou Cloud privé avec Raspberry Pi
+- Base de données Cloud (Cloud SQL MySQL)
+- Déploiement dans un environnement cloud (GCP)
 - Monitoring avec Prometheus et Grafana
 - Intégration ElasticSearch et Kibana
 

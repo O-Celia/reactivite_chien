@@ -1,0 +1,15 @@
+## app dns
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: streamlit-cert
+  namespace: default
+spec:
+  secretName: streamlit-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: streamlit.monapp.com
+  dnsNames:
+    - streamlit.monapp.com

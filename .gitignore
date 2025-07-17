@@ -1,2 +1,22 @@
-*.log
+# Fichiers sensibles et config
 .env
+fastapi-secret.yaml
+
+# Fichiers Python
+__pycache__/
+*.py[cod]
+
+# Logs
+*.log
+
+# Dossiers temporaires
+*.sqlite3
+*.db
+*.egg-info/
+.env/
+.venv/
+.vscode/
+
+# Fichiers système
+.DS_Store
+Thumbs.db

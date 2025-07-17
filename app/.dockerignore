@@ -1,0 +1,15 @@
+# Ne pas inclure le .env ni les secrets
+.env
+fastapi-secret.yaml
+
+# Cache Python
+__pycache__/
+*.py[cod]
+
+# Logs
+*.log
+
+# Éventuels dossiers inutiles
+.vscode/
+*.db
+*.sqlite3
