@@ -160,13 +160,22 @@ kubectl apply -f monitoring/prometheus.yaml
 kubectl apply -f monitoring/grafana.yaml
 ```
 
+### Connexion à une base de données MySQL sur GCP
+
+1. Créer une base MySQL dans GCP
+2. Autoriser les connexions via Cloud SQL Proxy
+3. Créer les tables depuis FastAPI :
+```bash
+python app/init_db.py
+```
+
 ### Configurer les secrets (API Key, SECRET_KEY)
 
 Ce projet utilise des variables sensibles (comme des clés API) qui ne sont pas stockées dans le dépôt Git. Pour cela, les secrets sont gérés via Kubernetes Secrets.
 
 #### Étape 1 – Créer le fichier de secrets localement
 
-Il est nécessaire de copier le fichier d'exemple, puis remplacer les valeurs par les vraies clés encodées en base64 : :
+Il est nécessaire de copier le fichier d'exemple, puis remplacer les valeurs par les vraies clés encodées en base64 :
 ```bash
 cp k8s/fastapi-secret-example.yaml k8s/fastapi-secret.yaml
 ```
@@ -174,6 +183,8 @@ Pour encoder en base6:
 ```bash
 echo -n "clé_secrète" | base64
 ```
+Il faut également indiquer les paramètres de l'URL de la base de données DATABASE_URL
+
 #### Étape 2 – Appliquer le secret à Kubernetes
 ```bash
 kubectl apply -f k8s/fastapi-secret.yaml

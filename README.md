@@ -54,6 +54,15 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 docker-compose up --build
 ```
 
+### Initialiser la base de données (SQLite)
+
+Avant de lancer l'application pour la première fois, il faut initialiser la base locale (SQLite) pour créer les tables nécessaires avec :
+```bash
+python app/init_db.py
+```
+
+⚠️ Cette opération est à faire une seule fois, lors de l'installation.
+
 ### Technologies utilisées
 
 | **Type**          | **Stack**                                                |
@@ -62,14 +71,14 @@ docker-compose up --build
 | **Frontend**      | Streamlit, Matplotlib / Plotly                           |
 | **Tests**         | Pytest                                                   |
 | **DevOps**        | Docker, GitHub Actions                                   |
-| **Observabilité** | Elasticsearch, Kibana (v2)                                |
-| **Cloud readiness**| Terraform, Vault, Oracle, K3s, Prometheus, Grafana (v2) |
+| **Observabilité** | Prometheus, Grafana  (v2)                                |
+| **Cloud readiness**| Terraform, Vault, Oracle, K3s (v2) |
 
 ---
 
 ## Expansion (V2 – cloud ready)
 
-Voir /infra/README.md pour le diagramme de l’architecture cible et les premiers fichiers Terraform.
+Voir /infra/README.md pour le diagramme de l’architecture cible et sa mise en place.
 
 ### Gestion de l'authentification par email & mot de passe
 
