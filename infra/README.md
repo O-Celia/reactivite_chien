@@ -49,7 +49,7 @@ Ce dossier contient la définition de l’infrastructure as code pour déployer 
 ├── main.tf               # Déclaration principale (VCN, compute, DB, K8s, etc.)
 ├── variables.tf          # Paramètres configurables de l'infra
 ├── outputs.tf            # Variables de sortie utiles (IP publiques, URLs, etc.)
-├── providers.tf          # Configuration du provider Oracle Cloud
+├── providers.tf          # Configuration du provider Google Cloud
 └── README.md             # Documentation de l’infrastructure (ce fichier)
 ```
 
