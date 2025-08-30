@@ -209,7 +209,7 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 ### 6.1. Automatisation DevOps
 
-- Utilisation de Terraform pour automatiser la création et la gestion des ressources cloud sur Oracle Cloud.
+- Utilisation de Terraform pour automatiser la création et la gestion des ressources cloud sur Microsoft Azure.
 - Provisionnement automatisé :
     - Déploiement de machines virtuelles ou services managés.
     - Création des ressources réseau nécessaires (VPC, Load Balancer, etc.).
@@ -219,23 +219,13 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 ### 6.2. Déploiement cloud
 
-- Déploiement sur Oracle Cloud ou Raspberry Pi.
+- Déploiement sur Microsoft Azure.
 - Déploiement de l’application dans un cluster K3s :
     - Backend (FastAPI) et Frontend (Streamlit) déployés dans des conteneurs gérés par K3s.
     - Base de données migrée de SQLite vers Oracle Database pour assurer une meilleure scalabilité et intégration avec l’écosystème OCI.
     - Configuration des services via des fichiers Helm Charts ou manifests YAML.
     - Utilisation d’Ingress Controller (Traefik) pour gérer les points d’entrée et le routage HTTP/HTTPS.
 - Alerting possible en cas d’erreurs critiques ou d’indisponibilité.
-
-### 6.3. Monitoring
-
-- Mise en place d’un système de supervision avec :
-    - Prometheus pour collecter les métriques des conteneurs (CPU, mémoire, erreurs, etc.).
-    - Grafana pour visualiser les métriques et détecter les anomalies ou baisses de performance via des dashboards dynamiques.
-
-### 6.4 Recherche intelligente
-
-- Elasticsearch pour la recherche (via Docker).
 
 ## 7. Maintenance et évolutions futures
 
@@ -249,3 +239,10 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Étendre l’analyse avec des graphiques supplémentaires.
 - Ajouter une page Médicaments (rappel, liste de médicaments, dosage).
 - Ajouter une page suivi des déplacements : carte sur laquelle l'utilisateur signale le début et la fin d'une balade, afin d'évaluer si la distance ou la durée de la balade augmente ou diminue.
+
+**Monitoring :**
+- Prometheus pour collecter les métriques des conteneurs (CPU, mémoire, erreurs, etc.).
+- Grafana pour visualiser les métriques et détecter les anomalies ou baisses de performance via des dashboards dynamiques.
+
+**Recherche intelligente :**
+- Elasticsearch pour la recherche (via Docker).
