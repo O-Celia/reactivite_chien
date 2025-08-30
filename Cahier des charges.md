@@ -59,7 +59,6 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
     - Fréquencedes déclencheurs.
     - Répartition et intensité des réactions.
     - Évolution temporelle.
-    - Ajout d'un lien Web PowerBI pour avoir des visualisations interactives disponibles.
  
 ![calendrier](https://github.com/user-attachments/assets/35260215-b299-457d-981d-24d842e149ee)
 
@@ -245,4 +244,5 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Recherche intelligente :**
 - Elasticsearch pour la recherche (via Docker).
+
 
