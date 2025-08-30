@@ -162,7 +162,6 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
     - /triggers : CRUD sur les déclencheurs.
     - /daily-entry : enregistrement des données journalières.
     - /analytics : récupération de données agrégées.
-    - /search : requête Elasticsearch.
 
 **Base de données SQLite :**
 - Modéliser les tables avec SQLAlchemy :
@@ -205,7 +204,7 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Configurer GitHub Actions pour :
     - Lancer des tests unitaires (FastAPI).
 
-## 6. Application V2
+## 6. Application V2 (non appliquée)
 
 ### 6.1. Automatisation DevOps
 
@@ -222,7 +221,7 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Déploiement sur Microsoft Azure.
 - Déploiement de l’application dans un cluster K3s :
     - Backend (FastAPI) et Frontend (Streamlit) déployés dans des conteneurs gérés par K3s.
-    - Base de données migrée de SQLite vers Oracle Database pour assurer une meilleure scalabilité et intégration avec l’écosystème OCI.
+    - Base de données migrée de SQLite vers Azure pour assurer une meilleure scalabilité et intégration avec l’écosystème.
     - Configuration des services via des fichiers Helm Charts ou manifests YAML.
     - Utilisation d’Ingress Controller (Traefik) pour gérer les points d’entrée et le routage HTTP/HTTPS.
 - Alerting possible en cas d’erreurs critiques ou d’indisponibilité.
@@ -246,3 +245,4 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Recherche intelligente :**
 - Elasticsearch pour la recherche (via Docker).
+
