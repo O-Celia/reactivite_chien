@@ -12,10 +12,9 @@ Ce projet est destiné à un usage personnel et mis en place pour l'observation 
 - Suivre les déclencheurs (événements stressants).
 - Enregistrer l’état émotionnel quotidien du chien (via des réactions prédéfinies et leur intensité).
 - Offrir une visualisation claire et intuitive via un calendrier et des graphiques.
-- Intégrer un dashboard Power BI pour l’analyse approfondie
-- Permettre la recherche avancée dans la base de données.
+- Permettre la recherche dans la base de données.
 - Garantir un accès simple et gratuit à l’application.
-- Préparer l’extension cloud native pour un futur déploiement,avec utilisation d'outils DevOps (CI/CD, conteneurisation, sécurité, monitoring).
+- Préparer l’extension cloud native pour un futur déploiement, avec utilisation d'outils DevOps (CI/CD, conteneurisation, sécurité, monitoring).
 
 ### 1.3. Exemple de scénario utilisateur
 
@@ -56,7 +55,7 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Calendrier interactif avec affichage visuel des données.
 - Détail de chaque journée accessible.
 - Page Analytics :
-    - Fréquencedes déclencheurs.
+    - Fréquence des déclencheurs.
     - Répartition et intensité des réactions.
     - Évolution temporelle.
  
@@ -203,11 +202,11 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 - Configurer GitHub Actions pour :
     - Lancer des tests unitaires (FastAPI).
 
-## 6. Application V2 (non appliquée)
+## 6. Application V2 (non appliquée mais préparée)
 
 ### 6.1. Automatisation DevOps
 
-- Utilisation de Terraform pour automatiser la création et la gestion des ressources cloud sur Microsoft Azure.
+- Utilisation de Terraform pour automatiser la création et la gestion des ressources cloud sur GCP.
 - Provisionnement automatisé :
     - Déploiement de machines virtuelles ou services managés.
     - Création des ressources réseau nécessaires (VPC, Load Balancer, etc.).
@@ -217,10 +216,10 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 ### 6.2. Déploiement cloud
 
-- Déploiement sur Microsoft Azure.
+- Déploiement sur GCP.
 - Déploiement de l’application dans un cluster K3s :
     - Backend (FastAPI) et Frontend (Streamlit) déployés dans des conteneurs gérés par K3s.
-    - Base de données migrée de SQLite vers Azure pour assurer une meilleure scalabilité et intégration avec l’écosystème.
+    - Base de données migrée de SQLite vers GCP pour assurer une meilleure scalabilité et intégration avec l’écosystème.
     - Configuration des services via des fichiers Helm Charts ou manifests YAML.
     - Utilisation d’Ingress Controller (Traefik) pour gérer les points d’entrée et le routage HTTP/HTTPS.
 - Alerting possible en cas d’erreurs critiques ou d’indisponibilité.
@@ -244,5 +243,3 @@ L'utilisateur se connecte à l’application sur son PC. Il saisit qu’aujourd�
 
 **Recherche intelligente :**
 - Elasticsearch pour la recherche (via Docker).
-
-
