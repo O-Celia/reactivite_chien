@@ -25,7 +25,6 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Base de données Cloud (Cloud SQL MySQL)
 - Déploiement dans un environnement cloud (GCP)
 - Monitoring avec Prometheus et Grafana
-- Intégration ElasticSearch et Kibana
 
 ---
 
