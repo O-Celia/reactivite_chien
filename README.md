@@ -71,7 +71,7 @@ python app/init_db.py
 | **Tests**         | Pytest                                                   |
 | **DevOps**        | Docker, GitHub Actions                                   |
 | **Observabilité** | Prometheus, Grafana  (v2)                                |
-| **Cloud readiness**| Terraform, Vault, Oracle, K3s (v2) |
+| **Cloud**         | Terraform, Vault, GCP, K3s (v2)                          |
 
 ---
 
@@ -89,3 +89,4 @@ Bien que ces fonctionnalités ne soient pas encore activées en local, elles son
 - Une montée en charge facilitée
 - Une meilleure sécurité utilisateur
 - Une interface prête pour un déploiement réel avec gestion d’utilisateurs
+
