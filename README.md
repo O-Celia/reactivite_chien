@@ -10,7 +10,7 @@ Application de suivi des chiens réactifs, permettant de centraliser les déclen
 - Backend API REST avec **FastAPI**
 - Frontend web simple avec **Streamlit**
 - Base de données **SQLite**
-- Visualisation des données avec **Matplotlib / Plotly**
+- Visualisation des données avec **Plotly**
 - Authentification simplifiée (JWT)
 - Tests unitaires avec **Pytest**
 - Conteneurisation du backend et frontend avec **Docker**
@@ -67,7 +67,7 @@ python app/init_db.py
 | **Type**          | **Stack**                                                |
 |-------------------|----------------------------------------------------------|
 | **Backend**       | FastAPI, Pydantic, Pandas, SQLite                        |
-| **Frontend**      | Streamlit, Matplotlib / Plotly                           |
+| **Frontend**      | Streamlit, Plotly                                        |
 | **Tests**         | Pytest                                                   |
 | **DevOps**        | Docker, GitHub Actions                                   |
 | **Observabilité** | Prometheus, Grafana  (v2)                                |
@@ -89,4 +89,5 @@ Bien que ces fonctionnalités ne soient pas encore activées en local, elles son
 - Une montée en charge facilitée
 - Une meilleure sécurité utilisateur
 - Une interface prête pour un déploiement réel avec gestion d’utilisateurs
+
 
